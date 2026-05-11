@@ -1,0 +1,24 @@
+== como utilizar o renomeador ==
+
+1 - clique no icone do renomeador
+2 - selecione a pasta que estão as OS para renomeação
+3 - espere o processo se dar como concluído
+4 - os arquivos ficarão separados em pastas com os respectivos nomes: 'PREVENTIVAS', 'CORRETIVAS', 'REQUISIÇÕES', 'VISTORIA'
+obs: o renomeador extrai os arquivos do arquivo compactado automaticamente
+
+considerações:
+o renomeador utiliza expressões regulares, procurando padrões de texto nas ordens de serviço, 
+para manter seu funcionamento a longo prazo peço que sejam consideradas as seguintes recomendações:
+
+1 - ao se criar um novo cliente é ideal que em seu CEP seja colocado um hífen ("-") para não se ter um funcionamento instavel do aplicativo
+2 - ao se criar um novo ativo lembrar de não colocar espaço (" ") em seu nome, para não se ter um funcionamento instavel no aplicativo
+3 - lembrar de sempre conferir o nome das ordens de serviço e sua localidade, o mesmo pode cometer falhas por meio do texto dado pelo técnico.
+
+obs: atualmente para atualizar o renomeador para adicionar novos tipos de ativos é necessário alterar o próprio código fonte,
+que se encontra em: C:\Users\PCM01\Desktop\Renomeador de OS\RenomeadorOS.
+É necessário usar um editor de código pra isso, este computador já tem o VS code studio pra isso.
+Para ter um novo executavel atualizado, é necessario abrir o terminal do dispositivo e digitar o comando python -m PyInstaller renomeador.py
+na pasta C:\Users\PCM01\Desktop\Renomeador de OS\RenomeadorOS
+
+no futuro adiciono uma função no executavel para adicionar novos ativos com uma interface.
+ass: caio PCM01
