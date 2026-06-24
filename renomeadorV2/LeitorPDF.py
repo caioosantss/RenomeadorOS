@@ -12,7 +12,9 @@ def extrair_texto():
 
     for PDF in os.listdir(pasta):
         caminho = os.path.join(pasta, PDF)
-        texto = open(pasta) 
-        print(texto)
+        arquivo = pymupdf.open(caminho) 
         
-extrair_texto()
+        for pagina in arquivo:
+            texto = pagina.get_text()
+            print(texto)
+        
