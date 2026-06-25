@@ -1,5 +1,6 @@
 import pymupdf
 from tkinter import Tk, filedialog
+import os
 
 
 caminho_pasta = {}

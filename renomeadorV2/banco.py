@@ -1,8 +1,15 @@
 import sqlite3
+import os
 
 class database:
     def __init__(self):
-        self.conexao = sqlite3.connect("database\database.db")
+        
+        base_dir = os.path.dirname(os.path.abspath(__file__)) 
+        
+        db_path = os.path.join( 
+            base_dir, "database", "database.db")
+        
+        self.conexao = sqlite3.connect(db_path)
         self.cur = self.conexao.cursor()
         self.executar = self.cur.execute
 
@@ -44,6 +51,7 @@ class database:
 
 data = database()
 data.criar_banco()
+data.verificar_ativos
         
 
             
