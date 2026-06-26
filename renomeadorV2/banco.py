@@ -47,11 +47,16 @@ class database:
 
     def verificar_ativos(self):
         self.executar("SELECT ativos FROM dados")
-        return self.cur.fetchall()
+        dados = self.cur.fetchall()
+        resultado = []
+
+        for n in range(len(dados)):
+            resultado.append(dados[n][0])
+
+        return resultado
 
 data = database()
 data.criar_banco()
-data.verificar_ativos
-        
+
 
             
