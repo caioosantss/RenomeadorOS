@@ -1,34 +1,39 @@
+import os
 import pymupdf
 from tkinter import Tk, filedialog
-import os
 
-caminho_pasta = {}
-def extrair_texto():
+caminho_pasta = []
+
+def extrair_texto() -> dict[str, str]:
     root = Tk()
     root.withdraw()
-    pdfs = {}
-    PDFref = []
 
-    pasta = filedialog.askdirectory(
-    title="Selecione a pasta",
+    pasta = filedialog.askdirectory(title="Selecione a pasta com os PDFs")
 
-)
-    if pasta == "":
-        return print("operação cancelada")
-        
-    caminho_pasta["pasta"] = pasta
-    for PDF in os.listdir(pasta):
+    if not pasta:
+        print("Operação cancelada.")
+        return {}
+    caminho_pasta.append(pasta)
+    pdfs: dict[str, str] = {}
+    contador = 1
 
-        if PDF.lower().endswith('.pdf'):
-            caminho = os.path.join(pasta, PDF)
-            arquivo = pymupdf.open(caminho) 
-        
-            for contador, pagina in enumerate(arquivo):
-                texto = pagina.get_text()
-                PDFref.append(texto)
-            pdfs[f'PDF{contador}'] = PDFref
-            return print(pdfs)
+    for nome_pdf in (os.listdir(pasta)): 
+        if nome_pdf.lower().endswith(".pdf"):
+            caminho = os.path.join(pasta, nome_pdf)
 
-        return print("nenhum PDF encontrado na pasta")
-    
-extrair_texto()
+            try:
+                arquivo = pymupdf.open(caminho)
+                texto = "".join(pagina.get_text() for pagina in arquivo)
+                arquivo.close()
+
+                pdfs[f"PDF{contador}"] = texto
+                contador += 1
+
+            except Exception as e:
+                print(f"Erro ao ler '{nome_pdf}': {e}")
+
+    if not pdfs:
+        print("Nenhum PDF encontrado na pasta.")
+
+    return pdfs
+
