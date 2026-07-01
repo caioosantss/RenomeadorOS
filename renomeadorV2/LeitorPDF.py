@@ -15,7 +15,7 @@ def extrair_texto() -> dict[str, str]:
         return {}
     caminho_pasta.append(pasta)
     pdfs: dict[str, str] = {}
-    contador = 1
+    
 
     for nome_pdf in (os.listdir(pasta)): 
         if nome_pdf.lower().endswith(".pdf"):
@@ -26,8 +26,8 @@ def extrair_texto() -> dict[str, str]:
                 texto = "".join(pagina.get_text() for pagina in arquivo)
                 arquivo.close()
 
-                pdfs[f"PDF{contador}"] = texto
-                contador += 1
+                pdfs[nome_pdf] = texto
+                
 
             except Exception as e:
                 print(f"Erro ao ler '{nome_pdf}': {e}")
