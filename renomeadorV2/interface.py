@@ -2,7 +2,9 @@ import customtkinter as ctk
 from PIL import Image
 import os
 from datetime import datetime
-import renomeador
+from renomeador import renomear
+
+
 
 # ============================
 # CONFIGURAÇÃO GERAL
