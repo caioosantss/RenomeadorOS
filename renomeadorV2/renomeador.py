@@ -24,11 +24,11 @@ def renomear():
                     os.rename(os.path.join(LeitorPDF.caminho_pasta[0], antigo_nome), os.path.join(LeitorPDF.caminho_pasta[0], novo_nome))
 
                 else:
-                    return print(f"não encontrado ativo da OS {codigoPDF.group()}")
-
+                    print(f"não encontrado ativo da OS {codigoPDF.group()}")
+                    continue
             else:
-                return print("não encotrado código")
-
+                print("não encotrado código")
+                continue
     else:
         return print("nenhum texto foi extraído")
 
