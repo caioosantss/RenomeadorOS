@@ -30,7 +30,7 @@ diretorio = Path(pasta_selecionada)
 regex_os = re.compile(r'\b(?!3)\d{8}(?=\s)')
 
 regex_ativos = re.compile(
-    r'\b(UE|UC|IF|BAG|BAC|UR|QE|DE|SP|ST|CH|FC|CR|UEVRF|UCVRF|QDE|INV|UV|PR|PC|RACK|QDEG|QDFC|BAGPR)\-?[A-Z0-9]*\d[A-Z0-9]*\b'
+    r'\b(UE|UC|IF|BAG|BAC|UR|QE|DE|SP|ST|CH|FC|CR|UEVRF|UCVRF|QDE|INV|UV|PR|PC|RACK|QDEG|QDFC|BAGPR|TRR)\-?[A-Z0-9]*\d[A-Z0-9]*\b'
 )
 
 regex_tipo = re.compile(
