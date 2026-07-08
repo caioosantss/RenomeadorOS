@@ -24,12 +24,13 @@ def renomear():
                     if ativoPDF:
                         novo_nome = (f'OS {codigoPDF.group()} {ativoPDF.group()}.pdf')
                         
-                        if os.path.exists(LeitorPDF.caminho_pasta[0], novo_nome):
+                        if os.path.exists(os.path.join(LeitorPDF.caminho_pasta[0], novo_nome)):
                             print("arquivo ja existe")
                             continue
                         
                         try:
                             os.rename(os.path.join(LeitorPDF.caminho_pasta[0], antigo_nome), os.path.join(LeitorPDF.caminho_pasta[0], novo_nome))
+                        
                             
                         except FileNotFoundError:
                             print(f"O arquivo {antigo_nome} não foi encontrado.")
@@ -55,4 +56,5 @@ def renomear():
     else:
         print("nenhum texto foi extraído")
         return
-
+    
+renomear()

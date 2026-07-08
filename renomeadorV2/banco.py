@@ -16,7 +16,8 @@ class database:
     def criar_banco(self):
         self.executar("""
             CREATE TABLE IF NOT EXISTS dados(
-                ativos TEXT PRIMARY KEY
+                ativos TEXT PRIMARY KEY,
+                descrição TEXT
             )
         """)
         self.conexao.commit()
@@ -24,7 +25,10 @@ class database:
 
     def registrar_ativos(self):
         
-        ativo = input("qual ativo deseja inserir? ")
+        
+        ativo = input("qual ativo deseja inserir? ").upper()
+        descricao = input("deseja inserir descriçao? ")
+        
         
         self.executar(
             "SELECT 1 FROM dados WHERE ativos = ?",
@@ -36,14 +40,15 @@ class database:
             
         if resultado is None:
                 
-            self.executar.fetchone("""
-            INSERT INTO dados
-            VALUES (?)
-        """, (ativo,)) 
+            self.executar("""
+            INSERT INTO dados (ativos, descrição)
+            VALUES (?, ?)
+        """, (ativo, descricao,)) 
             self.conexao.commit()
-            print(f"ativo {ativo} ja cadastrado")
+            print(f"código de identificação de OS: {ativo} cadastrado com sucesso")
         else:
-            return print("ativo ja cadastrado")
+            return print("não foi possivel cadastra-lo, pois o ativo ja se encontra cadastrado")
+        
 
     def verificar_ativos(self):
         self.executar("SELECT ativos FROM dados")
@@ -54,9 +59,65 @@ class database:
             resultado.append(dados[n][0])
 
         return resultado
+    
+    def alterar_ativo(self):
+        ativo = input("qual ativo deseja alterar?")
+        novo_nome = input("qual sera o novo nome? ")
+        
+        
+        self.executar(
+            "SELECT 1 FROM dados WHERE ativos = ?",
+            (ativo,)
+        )
 
+        resultado = self.cur.fetchone()
+               
+        if resultado is not None:
+        
+            self.executar(
+                """
+                UPDATE dados 
+                set ativos = ?
+                where ativos = ?  
+                      """, (novo_nome, ativo, ))
+            self.conexao.commit()
+            
+        else:
+            print("o ativo não foi localizado")
+            return
+
+    def alterar_descricao(self):
+        ativo = input("qual ativo deseja alterar a descricao?")
+        nova_descricao = input("insira a nova descrição")
+        
+        while nova_descricao == "":
+            nova_descricao = input("insira a nova descrição")
+
+ 
+        self.executar(
+            "SELECT 1 FROM dados WHERE ativos = ?",
+            (ativo,)
+        )
+
+        resultado = self.cur.fetchone()
+               
+        if resultado is not None:
+        
+            self.executar(
+                """
+                UPDATE dados 
+                set descrição = ?
+                where ativos = ?  
+                      """, (nova_descricao, ativo, ))
+            self.conexao.commit()
+            
+        else:
+            print("o ativo não foi localizado")
+            return
+              
 data = database()
 data.criar_banco()
+
 
 
             

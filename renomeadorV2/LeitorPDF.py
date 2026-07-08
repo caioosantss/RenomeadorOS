@@ -1,6 +1,7 @@
 import os
 import pymupdf
 from tkinter import Tk, filedialog
+import zipfile
 
 caminho_pasta = []
 
@@ -16,7 +17,9 @@ def extrair_texto() -> dict[str, str]:
     caminho_pasta.append(pasta)
     pdfs: dict[str, str] = {}
     
-
+    with zipfile.ZipFile(os.path.join(pasta,nome_pdf), "r") as zip_ref:
+        zip_ref.extractall(pasta)  
+    
     for nome_pdf in (os.listdir(pasta)): 
         if nome_pdf.lower().endswith(".pdf"):
             caminho = os.path.join(pasta, nome_pdf)
@@ -31,9 +34,10 @@ def extrair_texto() -> dict[str, str]:
 
             except Exception as e:
                 print(f"Erro ao ler '{nome_pdf}': {e}")
-
+            
     if not pdfs:
         print("Nenhum PDF encontrado na pasta.")
 
     return pdfs
+
 
