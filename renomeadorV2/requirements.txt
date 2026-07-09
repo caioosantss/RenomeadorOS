@@ -1,27 +1,8 @@
-Atue como um desenvolvedor Python sênior. Refatore o projeto de renomeação de OS anexo seguindo estritamente as instruções abaixo, minimizando alterações desnecessárias.
+# Interface gráfica moderna baseada em Tkinter
+customtkinter>=5.2.2
 
-### 1. Reestruturação de Arquivos (`/interface`)
-Mova e divida `interface.py` em uma nova pasta chamada `interface/`:
-* `interface/principal.py`: Contém apenas a janela principal (GUI).
-* `interface/servicos.py`: Contém as funções de serviço da interface organizadas separadamente.
+# Manipulação de imagens (logo da interface)
+Pillow>=11.0.0
 
-### 2. Vínculos de Botões (Command)
-Aponte os comandos dos botões na interface para as seguintes funções:
-* Botão **"Renomear OS"** ➔ `renomear()` (de `renomear.py`).
-* Botão **"Cadastrar Ativo"** ➔ `registrar_ativo()` (de `banco.py`).
-* Botão **"Consultar Ativos"** ➔ `verificar_ativos()` (de `banco.py`).
-* Botão **"Consultar Histórico"** ➔ Função de consulta criada no Passo 3.2.
-* Botão **"Desfazer Ação"** ➔ Função de rollback criada no Passo 4.
-
-### 3. Banco de Dados (`banco.py`)
-Implemente duas novas funções SQLite:
-1.  **Criação/Inserção de Histórico:** Criar tabela para log de alterações contendo: `id`, `nome_antigo`, `nome_novo`, `horario` (timestamp).
-2.  **Consulta de Histórico:** Retornar e exibir os registros dessa tabela.
-
-### 4. Função Desfazer (`renomear.py`)
-* Crie `desfazer_acao()`: Lê o último lote de alterações no banco de dados e reverte os nomes dos arquivos para os nomes antigos.
-
-### 5. Saída de Dados
-* Redirecione todos os logs e saídas (`print()`) para o componente de console/terminal da interface gráfica, em vez do terminal padrão do sistema.
-
-Forneça os códigos completos e atualizados para cada arquivo modificado. Se houver alguma ambiguidade, pergunte antes de gerar o código.
+# Leitura e extração de texto de PDFs
+PyMuPDF>=1.26.0
