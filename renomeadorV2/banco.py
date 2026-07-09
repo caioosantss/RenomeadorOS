@@ -26,7 +26,7 @@ class database:
     def registrar_ativos(self):
         
         
-        ativo = input("qual ativo deseja inserir? ").upper()
+        ativo = input("qual código de identificação ativo deseja inserir? ").upper()
         descricao = input("deseja inserir descriçao? ")
         
         
