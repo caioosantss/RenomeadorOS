@@ -5,6 +5,22 @@ import zipfile
 
 caminho_pasta = []
 
+def verificar_zip(pasta):
+    
+    arquivos = os.listdir(pasta)
+
+    if arquivos:
+        arquivo = arquivos[0]
+      
+        with zipfile.ZipFile(os.path.join(pasta,arquivo), "r") as zip_ref:
+            if arquivo.endswith(".zip") or arquivo.endswith("rar"):                
+                zip_ref.extractall(pasta)
+                return "PDF descopactados"
+            else:
+                return None
+    else:
+        return None
+                
 def extrair_texto() -> dict[str, str]:
     root = Tk()
     root.withdraw()
@@ -17,9 +33,8 @@ def extrair_texto() -> dict[str, str]:
     caminho_pasta.append(pasta)
     pdfs: dict[str, str] = {}
     
-    with zipfile.ZipFile(os.path.join(pasta,nome_pdf), "r") as zip_ref:
-        zip_ref.extractall(pasta)  
-    
+    verificar_zip(pasta)
+        
     for nome_pdf in (os.listdir(pasta)): 
         if nome_pdf.lower().endswith(".pdf"):
             caminho = os.path.join(pasta, nome_pdf)
@@ -34,6 +49,7 @@ def extrair_texto() -> dict[str, str]:
 
             except Exception as e:
                 print(f"Erro ao ler '{nome_pdf}': {e}")
+                
             
     if not pdfs:
         print("Nenhum PDF encontrado na pasta.")
