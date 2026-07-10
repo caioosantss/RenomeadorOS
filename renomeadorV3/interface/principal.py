@@ -2,7 +2,7 @@ import customtkinter as ctk
 from PIL import Image
 import os
 from datetime import datetime
-from servicos import ServicoInterface
+from .servicos import ServicoInterface
 
 
 # ============================
