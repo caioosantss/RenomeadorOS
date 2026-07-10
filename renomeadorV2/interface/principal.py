@@ -2,8 +2,7 @@ import customtkinter as ctk
 from PIL import Image
 import os
 from datetime import datetime
-from renomeador import renomear
-
+from .servicos import ServicoInterface
 
 
 # ============================
@@ -27,20 +26,59 @@ VERDE_LOG    = "#4fc97e"
 AMARELO      = "#f0a500"
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PARENT_DIR = os.path.dirname(SCRIPT_DIR)
 
 def carregar_imagem(nome_arquivo, tamanho):
-    caminho = os.path.join(SCRIPT_DIR, nome_arquivo)
+    """Carrega uma imagem do diretório assets"""
+    caminho = os.path.join(PARENT_DIR, nome_arquivo)
     if os.path.exists(caminho):
         return ctk.CTkImage(Image.open(caminho), size=tamanho)
     return None
 
 def hora_atual():
+    """Retorna a hora atual formatada"""
     return datetime.now().strftime("%H:%M:%S")
+
+
+# ============================
+# JANELA PRINCIPAL
+# ============================
+app = ctk.CTk()
+app.title("Renomeador de Ordens de Servico")
+app.geometry("1024x600")
+app.resizable(False, False)
+app.configure(fg_color=BRANCO)
+
+# ============================
+# CONSOLE E FUNÇÕES
+# ============================
+console_text = None  # Será inicializado depois
+
+def console_log(msg, nivel="INFO"):
+    """Escreve uma mensagem no console"""
+    global console_text
+    if console_text:
+        console_text.configure(state="normal")
+        console_text.insert("end", f"[{hora_atual()}] [{nivel}]  {msg}\n")
+        console_text.see("end")
+        console_text.configure(state="disabled")
+
+def limpar_console():
+    """Limpa o console"""
+    global console_text
+    if console_text:
+        console_text.configure(state="normal")
+        console_text.delete("1.0", "end")
+        console_text.configure(state="disabled")
+
+# Inicializa serviços
+servicos = ServicoInterface(console_log)
 
 # ============================
 # JANELAS SECUNDÁRIAS
 # ============================
 def abrir_historico():
+    """Abre janela de histórico de operações"""
     win = ctk.CTkToplevel(app)
     win.title("Histórico de Operações")
     win.geometry("640x440")
@@ -57,22 +95,28 @@ def abrir_historico():
     frame = ctk.CTkScrollableFrame(win, fg_color=AZUL_CONSOLE, corner_radius=10)
     frame.pack(fill="both", expand=True, padx=20, pady=(0, 20))
 
-    exemplos = [
-        "[09:15:01]  OS 12345678 CORRETIVA.pdf — Renomeado",
-        "[09:16:02]  OS 87654321 REQUISICAO.pdf — Renomeado",
-        "[09:17:03]  OS nao encontrada: arquivo3.pdf",
-        "[09:18:04]  OS 11223344 PREVENTIVA.pdf — Renomeado",
-        "[09:19:05]  OS 55667788 RECEBIMENTO.pdf — Renomeado",
-    ]
-    for item in exemplos:
+    # Busca histórico do banco de dados
+    historico = servicos.consultar_historico()
+    
+    if historico:
+        for registro in historico:
+            # registro: (id, novo_nome, nome_antigo, horario, alteracoes)
+            texto = f"[{registro[3]}]  {registro[4]} | {registro[1]} ← {registro[2]}"
+            ctk.CTkLabel(
+                frame, text=texto,
+                font=ctk.CTkFont(family="Courier", size=11),
+                text_color=VERDE_LOG, anchor="w"
+            ).pack(fill="x", padx=12, pady=4)
+    else:
         ctk.CTkLabel(
-            frame, text=item,
-            font=ctk.CTkFont(family="Courier", size=12),
-            text_color=VERDE_LOG, anchor="w"
-        ).pack(fill="x", padx=12, pady=4)
+            frame, text="Nenhum histórico disponível",
+            font=ctk.CTkFont(size=12),
+            text_color=CINZA_TEXTO, anchor="w"
+        ).pack(fill="x", padx=12, pady=20)
 
 
 def abrir_consultar_ativos():
+    """Abre janela para consultar ativos"""
     win = ctk.CTkToplevel(app)
     win.title("Consultar Ativos")
     win.geometry("640x440")
@@ -104,15 +148,26 @@ def abrir_consultar_ativos():
     frame = ctk.CTkScrollableFrame(win, fg_color=AZUL_CONSOLE, corner_radius=10)
     frame.pack(fill="both", expand=True, padx=20, pady=(0, 20))
 
-    for ativo in ["UE-001", "UC-042", "IF-203", "BAG-17", "UR-88", "QE-05"]:
+    # Busca ativos do banco de dados
+    ativos = servicos.consultar_ativos()
+    
+    if ativos:
+        for ativo in ativos:
+            ctk.CTkLabel(
+                frame, text=f"  {ativo}",
+                font=ctk.CTkFont(size=12),
+                text_color=VERDE_LOG, anchor="w"
+            ).pack(fill="x", padx=12, pady=5)
+    else:
         ctk.CTkLabel(
-            frame, text=f"  {ativo}",
+            frame, text="Nenhum ativo cadastrado",
             font=ctk.CTkFont(size=12),
-            text_color=VERDE_LOG, anchor="w"
-        ).pack(fill="x", padx=12, pady=5)
+            text_color=CINZA_TEXTO, anchor="w"
+        ).pack(fill="x", padx=12, pady=20)
 
 
 def abrir_cadastrar_ativos():
+    """Abre janela para cadastrar novo ativo"""
     win = ctk.CTkToplevel(app)
     win.title("Cadastrar Ativo")
     win.geometry("500x320")
@@ -129,37 +184,53 @@ def abrir_cadastrar_ativos():
     form = ctk.CTkFrame(win, fg_color=AZUL_ESCURO, corner_radius=12)
     form.pack(fill="both", expand=True, padx=20, pady=(0, 20))
 
-    # Apenas Código e Descrição (sem Localização e Responsável)
-    for campo in ["Codigo do Ativo", "Descricao"]:
-        ctk.CTkLabel(
-            form, text=campo,
-            font=ctk.CTkFont(size=12, weight="bold"),
-            text_color=TEXTO_CLARO, anchor="w"
-        ).pack(fill="x", padx=16, pady=(14, 2))
+    # Campos do formulário
+    ctk.CTkLabel(
+        form, text="Codigo do Ativo",
+        font=ctk.CTkFont(size=12, weight="bold"),
+        text_color=TEXTO_CLARO, anchor="w"
+    ).pack(fill="x", padx=16, pady=(14, 2))
 
-        ctk.CTkEntry(
-            form, placeholder_text=f"Digite {campo.lower()}...",
-            height=36, corner_radius=8,
-            fg_color=BRANCO, text_color=TEXTO_ESCURO,
-            border_color=AZUL_BOTAO, border_width=1
-        ).pack(fill="x", padx=16)
+    entry_codigo = ctk.CTkEntry(
+        form, placeholder_text="Digite o código...",
+        height=36, corner_radius=8,
+        fg_color=BRANCO, text_color=TEXTO_ESCURO,
+        border_color=AZUL_BOTAO, border_width=1
+    )
+    entry_codigo.pack(fill="x", padx=16)
+
+    ctk.CTkLabel(
+        form, text="Descricao",
+        font=ctk.CTkFont(size=12, weight="bold"),
+        text_color=TEXTO_CLARO, anchor="w"
+    ).pack(fill="x", padx=16, pady=(14, 2))
+
+    entry_descricao = ctk.CTkEntry(
+        form, placeholder_text="Digite a descrição...",
+        height=36, corner_radius=8,
+        fg_color=BRANCO, text_color=TEXTO_ESCURO,
+        border_color=AZUL_BOTAO, border_width=1
+    )
+    entry_descricao.pack(fill="x", padx=16)
+
+    def salvar_ativo():
+        """Salva o ativo no banco de dados"""
+        codigo = entry_codigo.get()
+        descricao = entry_descricao.get()
+        
+        if servicos.cadastrar_ativo(codigo, descricao):
+            entry_codigo.delete(0, "end")
+            entry_descricao.delete(0, "end")
+            console_log(f"Ativo '{codigo.upper()}' cadastrado com sucesso", "SUCCESS")
 
     ctk.CTkButton(
         form, text="Salvar Ativo",
         height=40, corner_radius=8,
         fg_color=AZUL_BOTAO, hover_color="#174a82",
-        font=ctk.CTkFont(size=13, weight="bold")
+        font=ctk.CTkFont(size=13, weight="bold"),
+        command=salvar_ativo
     ).pack(padx=16, pady=20, fill="x")
 
-
-# ============================
-# JANELA PRINCIPAL
-# ============================
-app = ctk.CTk()
-app.title("Renomeador de Ordens de Servico")
-app.geometry("1024x600")
-app.resizable(False, False)
-app.configure(fg_color=BRANCO)
 
 # ============================
 # HEADER
@@ -168,7 +239,7 @@ header = ctk.CTkFrame(app, fg_color=CINZA_HEADER, height=82, corner_radius=0)
 header.pack(fill="x")
 header.pack_propagate(False)
 
-logo_img = carregar_imagem("assets\logo_RGT.png", (175, 64))
+logo_img = carregar_imagem("assets/logo_RGT.png", (175, 64))
 if logo_img:
     ctk.CTkLabel(header, image=logo_img, text="").place(x=16, y=9)
 else:
@@ -250,7 +321,7 @@ ctk.CTkButton(
     hover_color=AZUL_MEDIO,
     text_color=TEXTO_CLARO,
     anchor="w",
-    command=lambda: [console_log("Iniciando renomeacao...")]
+    command=servicos.renomear_os
 ).pack(anchor="w")
 
 # Console
@@ -275,7 +346,7 @@ ctk.CTkButton(
     fg_color=AZUL_MEDIO,
     hover_color=AZUL_ESCURO,
     text_color=TEXTO_CLARO,
-    command=lambda: limpar_console()
+    command=limpar_console
 ).pack(side="right")
 
 console_text = ctk.CTkTextbox(
@@ -287,17 +358,6 @@ console_text = ctk.CTkTextbox(
     wrap="word", state="disabled"
 )
 console_text.pack(fill="both", expand=True, padx=10, pady=(0, 10))
-
-def console_log(msg, nivel="INFO"):
-    console_text.configure(state="normal")
-    console_text.insert("end", f"[{hora_atual()}] [{nivel}]  {msg}\n")
-    console_text.see("end")
-    console_text.configure(state="disabled")
-
-def limpar_console():
-    console_text.configure(state="normal")
-    console_text.delete("1.0", "end")
-    console_text.configure(state="disabled")
 
 console_log("Iniciando sistema...")
 console_log("Aguardando acao do usuario...")
@@ -349,7 +409,7 @@ ctk.CTkButton(
     border_width=1,
     border_color="#7a3030",
     anchor="center",
-    command=lambda: console_log("Ultima acao desfeita.", "UNDO")
+    command=servicos.desfazer_acao
 ).pack(fill="x", padx=14, pady=(3, 0))
 
 # Separador e Resumo Rápido
@@ -412,7 +472,7 @@ ctk.CTkLabel(
 
 ctk.CTkLabel(
     footer,
-    text="Versao: 1.1.0",
+    text="Versao: 2.0.0",
     font=ctk.CTkFont(size=10),
     text_color=CINZA_TEXTO
 ).grid(row=0, column=1)
@@ -424,4 +484,5 @@ ctk.CTkLabel(
     text_color=CINZA_TEXTO
 ).grid(row=0, column=2, padx=20, sticky="e")
 
-app.mainloop()
+if __name__ == "__main__":
+    app.mainloop()
