@@ -28,6 +28,9 @@ def renomear(console_log=None):
             print(f"[{nivel}] {msg}")
     
     arquivos = LeitorPDF.extrair_texto()
+
+    if arquivos == "operação foi cancelada pelo usuário":
+        return "operação foi cancelada pelo usuário"
     
     if not arquivos:
         log("Nenhum arquivo PDF foi encontrado na pasta selecionada", "WARNING")
