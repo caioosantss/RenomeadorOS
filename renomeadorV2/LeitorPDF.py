@@ -11,7 +11,6 @@ def verificar_zip(pasta):
     if arquivos:
         arquivo = arquivos[0]
       
-        # ✅ VERIFICA PRIMEIRO se é .zip
         if arquivo.lower().endswith(".zip"):
             try: 
                 with zipfile.ZipFile(os.path.join(pasta,arquivo), "r") as zip_ref:
@@ -19,8 +18,7 @@ def verificar_zip(pasta):
                     return "PDF descompactados"
                 
             except zipfile.BadZipFile:
-                print(f"✗ Erro: '{arquivo}' não é um ZIP válido")
-                return None
+                return "não há arquivos zip na pasta selecionada"
         else:
             return None
     else:
@@ -33,18 +31,14 @@ def extrair_texto() -> dict[str, str]:
     pasta = filedialog.askdirectory(title="Selecione a pasta com os PDFs")
 
     if not pasta:
-        status = "operação foi cancelada pelo usuário"
+        status = "operação foi cancelada pelo usuário (não foi selecionada nenhuma pasta)"
         return status
     
     caminho_pasta.append(pasta)
     pdfs: dict[str, str] = {}
-    
-    for nome_zip in (os.listdir(pasta)):
-        if nome_zip.lower().endswith(".zip"):
-            verificar_zip(pasta)
-
-            if verificar_zip(pasta) == "operação foi cancelada pelo usuário":
-                return "operação foi cancelada pelo usuário"
+     
+     #incluir verificação de arquivos zip
+    verificar_zip(pasta)
         
     for nome_pdf in (os.listdir(pasta)): 
         if nome_pdf.lower().endswith(".pdf"):
