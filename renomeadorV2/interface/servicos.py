@@ -36,8 +36,8 @@ class ServicoInterface:
             # Chama a função renomear que retorna lista de arquivos renomeados
             resultado = renomeador.renomear(self.console_log)
             
-            if resultado == "operação foi cancelada pelo usuário":
-                self.console_log("Operação cancelada pelo usuário", "WARNING")
+            if resultado == "operação foi cancelada pelo usuário (não foi selecionada nenhuma pasta)":
+                self.console_log("Operação cancelada pelo usuário (não foi selecionada nenhuma pasta)", "WARNING")
 
             elif resultado:
                 self.console_log(f"Renomeação concluída: {len(resultado)} arquivo(s) processado(s)", "SUCCESS")                
