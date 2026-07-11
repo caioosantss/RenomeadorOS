@@ -3,6 +3,7 @@ Módulo de Serviços da Interface
 Contém as funções que executam as ações dos botões
 """
 
+from logging import root
 import sys
 import os
 
@@ -35,8 +36,12 @@ class ServicoInterface:
             # Chama a função renomear que retorna lista de arquivos renomeados
             resultado = renomeador.renomear(self.console_log)
             
-            if resultado:
-                self.console_log(f"Renomeação concluída: {len(resultado)} arquivo(s) processado(s)", "SUCCESS")
+            if resultado == "operação foi cancelada pelo usuário":
+                self.console_log("Operação cancelada pelo usuário", "WARNING")
+
+            elif resultado:
+                self.console_log(f"Renomeação concluída: {len(resultado)} arquivo(s) processado(s)", "SUCCESS")                
+
             else:
                 self.console_log("Nenhum arquivo foi renomeado", "WARNING")
         except Exception as e:
@@ -117,3 +122,7 @@ class ServicoInterface:
         except Exception as e:
             self.console_log(f"Erro ao desfazer ação: {str(e)}", "ERROR")
             return False
+
+
+    
+    

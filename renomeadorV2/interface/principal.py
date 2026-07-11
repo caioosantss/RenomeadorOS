@@ -3,7 +3,7 @@ from PIL import Image
 import os
 from datetime import datetime
 from .servicos import ServicoInterface
-
+import sys
 
 # ============================
 # CONFIGURAÇÃO GERAL
@@ -27,6 +27,12 @@ AMARELO      = "#f0a500"
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PARENT_DIR = os.path.dirname(SCRIPT_DIR)
+
+def fechar_app():
+        """Fecha a aplicação"""
+        app.quit()
+        app.destroy()
+        sys.exit(0)
 
 def carregar_imagem(nome_arquivo, tamanho):
     """Carrega uma imagem do diretório assets"""
