@@ -98,7 +98,7 @@ def abrir_historico():
         text_color=AZUL_ESCURO
     ).pack(pady=(20, 12))
 
-    frame = ctk.CTkScrollableFrame(win, fg_color=AZUL_CONSOLE, corner_radius=10)
+    frame = ctk.CTkScrollableFrame(win, fg_color="transparent", corner_radius=10)
     frame.pack(fill="both", expand=True, padx=20, pady=(0, 20))
 
     # Busca histórico do banco de dados
@@ -136,7 +136,7 @@ def abrir_consultar_ativos():
         text_color=AZUL_ESCURO
     ).pack(pady=(20, 12))
 
-    search_frame = ctk.CTkFrame(win, fg_color="transparent")
+    search_frame = ctk.CTkFrame(win, fg_color=AZUL_PAINEL)
     search_frame.pack(fill="x", padx=20, pady=(0, 10))
 
     ctk.CTkEntry(
@@ -151,7 +151,7 @@ def abrir_consultar_ativos():
         corner_radius=8
     ).pack(side="left")
 
-    frame = ctk.CTkScrollableFrame(win, fg_color=AZUL_CONSOLE, corner_radius=10)
+    frame = ctk.CTkScrollableFrame(win, fg_color=AZUL_PAINEL, corner_radius=10)
     frame.pack(fill="both", expand=True, padx=20, pady=(0, 20))
 
     # Busca ativos do banco de dados
@@ -290,14 +290,13 @@ action_panel = ctk.CTkFrame(center, fg_color=AZUL_PAINEL, corner_radius=14)
 action_panel.pack(fill="x", pady=(0, 12))
 
 # Ícone circular
-icon_circle = ctk.CTkFrame(action_panel, fg_color=AZUL_MEDIO,
+icon_circle = ctk.CTkFrame(action_panel, fg_color=AZUL_PAINEL,
                             width=90, height=90, corner_radius=45)
 icon_circle.pack(side="left", padx=24, pady=20)
 icon_circle.pack_propagate(False)
 ctk.CTkLabel(
-    icon_circle, text="OS",
+    icon_circle, text="",
     font=ctk.CTkFont(size=22, weight="bold"),
-    text_color=TEXTO_CLARO
 ).place(relx=0.5, rely=0.5, anchor="center")
 
 # Texto + botão
@@ -385,7 +384,7 @@ ctk.CTkLabel(
 
 # Botões principais do menu
 botoes_menu = [
-    ("Historico",        abrir_historico,        AZUL_BOTAO),
+    ("Historico",        abrir_historico,        "transparent"),
     ("Consultar Ativos", abrir_consultar_ativos, "transparent"),
     ("Cadastrar Ativos", abrir_cadastrar_ativos, "transparent"),
 ]
@@ -419,43 +418,6 @@ ctk.CTkButton(
 ).pack(fill="x", padx=14, pady=(3, 0))
 
 # Separador e Resumo Rápido
-ctk.CTkFrame(right, height=1, fg_color=AZUL_MEDIO).pack(fill="x", padx=14, pady=(10, 4))
-
-ctk.CTkLabel(
-    right, text="RESUMO RAPIDO",
-    font=ctk.CTkFont(size=10, weight="bold"),
-    text_color=CINZA_TEXTO,
-    anchor="w"
-).pack(fill="x", padx=16, pady=(2, 6))
-
-resumo = [
-    ("OS Hoje",    "—", AZUL_BOTAO),
-    ("Renomeadas", "—", "#2e7d52"),
-    ("Pendentes",  "—", AMARELO),
-]
-
-for label, valor, cor in resumo:
-    row = ctk.CTkFrame(right, fg_color=AZUL_ESCURO, corner_radius=8)
-    row.pack(fill="x", padx=14, pady=3)
-    row.columnconfigure(1, weight=1)
-
-    ctk.CTkFrame(row, fg_color=cor, width=10, height=10, corner_radius=5).grid(
-        row=0, column=0, padx=(10, 6), pady=12, sticky="w"
-    )
-
-    ctk.CTkLabel(
-        row, text=label,
-        font=ctk.CTkFont(size=11),
-        text_color=TEXTO_CLARO,
-        anchor="w"
-    ).grid(row=0, column=1, sticky="w", pady=12)
-
-    ctk.CTkLabel(
-        row, text=valor,
-        font=ctk.CTkFont(size=13, weight="bold"),
-        text_color=TEXTO_CLARO,
-        anchor="e"
-    ).grid(row=0, column=2, padx=(0, 10), pady=12, sticky="e")
 
 # ============================
 # RODAPÉ
