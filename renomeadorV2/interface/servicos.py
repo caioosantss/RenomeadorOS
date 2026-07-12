@@ -89,19 +89,7 @@ class ServicoInterface:
         """Consulta o histórico de renomeações"""
         try:
             historico = self.db.consultar_historico()
-            
-            if historico:
-                self.console_log("=== HISTÓRICO DE RENOMEAÇÕES ===", "INFO")
-                for registro in historico:
-                    # registro: (id, novo_nome, nome_antigo, horario, alteracoes)
-                    self.console_log(
-                        f"[{registro[3]}] {registro[4]} | {registro[1]} ← {registro[2]}", 
-                        "INFO"
-                    )
-                self.console_log(f"Total: {len(historico)} registro(s)", "SUCCESS")
-            else:
-                self.console_log("Nenhum histórico de renomeações encontrado", "WARNING")
-            
+                        
             return historico
         except Exception as e:
             self.console_log(f"Erro ao consultar histórico: {str(e)}", "ERROR")
