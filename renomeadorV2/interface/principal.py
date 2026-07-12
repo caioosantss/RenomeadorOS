@@ -98,7 +98,7 @@ def abrir_historico():
         text_color=AZUL_ESCURO
     ).pack(pady=(20, 12))
 
-    frame = ctk.CTkScrollableFrame(win, fg_color="transparent", corner_radius=10)
+    frame = ctk.CTkScrollableFrame(win, fg_color=AZUL_CONSOLE, corner_radius=10)
     frame.pack(fill="both", expand=True, padx=20, pady=(0, 20))
 
     # Busca histórico do banco de dados
