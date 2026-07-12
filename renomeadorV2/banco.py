@@ -1,5 +1,7 @@
 import sqlite3
 import os
+from datetime import datetime
+
 
 class database:
     def __init__(self):
@@ -14,6 +16,7 @@ class database:
         self.executar = self.cur.execute
 
     def criar_banco(self):
+        """Cria a tabela de ativos se não existir"""
         self.executar("""
             CREATE TABLE IF NOT EXISTS dados(
                 ativos TEXT PRIMARY KEY,
@@ -21,36 +24,94 @@ class database:
             )
         """)
         self.conexao.commit()
+    
+    def criar_tabela_historico(self):
+        """Cria a tabela de histórico de renomeações"""
+        self.executar("""
+            CREATE TABLE IF NOT EXISTS historico_renomeacoes(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                novo_nome TEXT NOT NULL,
+                nome_antigo TEXT NOT NULL,
+                horario TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                alteracoes TEXT NOT NULL
+            )
+        """)
+        self.conexao.commit()
+    
+    def registrar_historico(self, novo_nome, nome_antigo, alteracoes="Renomeação"):
+        """
+        Registra uma renomeação no histórico
         
+        Args:
+            novo_nome: Novo nome do arquivo
+            nome_antigo: Nome antigo do arquivo
+            alteracoes: Descrição da alteração
+        """
+        horario = datetime.now().strftime("%H:%M:%S")
+        self.executar("""
+            INSERT INTO historico_renomeacoes (novo_nome, nome_antigo, horario, alteracoes)
+            VALUES (?, ?, ?, ?)
+        """, (novo_nome, nome_antigo, horario, alteracoes))
+        self.conexao.commit()
+    
+    def consultar_historico(self, limite=None):
+        """
+        Consulta o histórico de renomeações
+        
+        Args:
+            limite: Número máximo de registros a retornar (None = todos)
+            
+        Returns:
+            Lista com tuplas (id, novo_nome, nome_antigo, horario, alteracoes)
+        """
+        if limite:
+            self.executar("""
+                SELECT id, novo_nome, nome_antigo, horario, alteracoes 
+                FROM historico_renomeacoes 
+                ORDER BY id DESC LIMIT ?
+            """, (limite,))
+        else:
+            self.executar("""
+                SELECT id, novo_nome, nome_antigo, horario, alteracoes 
+                FROM historico_renomeacoes 
+                ORDER BY id DESC
+            """)
+        return self.cur.fetchall()
+    
+    def limpar_historico(self):
+        """Limpa todo o histórico de renomeações"""
+        self.executar("DELETE FROM historico_renomeacoes")
+        self.conexao.commit()
 
-    def registrar_ativos(self):
+    def registrar_ativo(self, codigo_ativo, descricao=""):
+        """
+        Registra um novo ativo
         
-        
-        ativo = input("qual código de identificação ativo deseja inserir? ").upper()
-        descricao = input("deseja inserir descriçao? ")
-        
-        
+        Args:
+            codigo_ativo: Código de identificação do ativo
+            descricao: Descrição do ativo
+        """
         self.executar(
             "SELECT 1 FROM dados WHERE ativos = ?",
-            (ativo,)
+            (codigo_ativo,)
         )
 
         resultado = self.cur.fetchone()
         
-            
         if resultado is None:
-                
             self.executar("""
-            INSERT INTO dados (ativos, descrição)
-            VALUES (?, ?)
-        """, (ativo, descricao,)) 
+                INSERT INTO dados (ativos, descrição)
+                VALUES (?, ?)
+            """, (codigo_ativo, descricao)) 
             self.conexao.commit()
-            print(f"código de identificação de OS: {ativo} cadastrado com sucesso")
+            print(f"Ativo '{codigo_ativo}' cadastrado com sucesso")
+            return True
         else:
-            return print("não foi possivel cadastra-lo, pois o ativo ja se encontra cadastrado")
-        
+            print(f"Ativo '{codigo_ativo}' já existe no sistema")
+            return False
 
     def verificar_ativos(self):
+        """Retorna lista de todos os ativos cadastrados"""
         self.executar("SELECT ativos FROM dados")
         dados = self.cur.fetchall()
         resultado = []
@@ -117,6 +178,7 @@ class database:
               
 data = database()
 data.criar_banco()
+data.criar_tabela_historico()
 
 
 
