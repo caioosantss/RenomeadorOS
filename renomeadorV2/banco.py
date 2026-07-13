@@ -20,10 +20,15 @@ class database:
         self.executar("""
             CREATE TABLE IF NOT EXISTS dados(
                 ativos TEXT PRIMARY KEY,
-                descrição TEXT
+                descrição TEXT,
+                tipos_OS TEXT
             )
         """)
         self.conexao.commit()
+        
+    def add(self):
+        self.executar("ALTER TABLE dados DROP COLUMN email;")
+        print("apagado")
     
     def criar_tabela_historico(self):
         """Cria a tabela de histórico de renomeações"""
@@ -104,10 +109,37 @@ class database:
                 VALUES (?, ?)
             """, (codigo_ativo, descricao)) 
             self.conexao.commit()
-            print(f"Ativo '{codigo_ativo}' cadastrado com sucesso")
+
             return True
         else:
-            print(f"Ativo '{codigo_ativo}' já existe no sistema")
+   
+            return False
+        
+    def registrar_Tipo_OS(self, codigo,):
+        """
+        Registra um novo ativo
+        
+        Args:
+            codigo_ativo: Código de identificação do ativo
+            descricao: Descrição do ativo
+        """
+        self.executar(
+            "SELECT 1 FROM dados WHERE tipos_OS = ?",
+            (codigo,)
+        )
+
+        resultado = self.cur.fetchone()
+        
+        if resultado is None:
+            self.executar("""
+                INSERT INTO dados (tipos_OS)
+                VALUES (?)
+            """, (codigo,)) 
+            self.conexao.commit()
+
+            return True
+        else:
+   
             return False
 
     def verificar_ativos(self):
@@ -120,6 +152,18 @@ class database:
             resultado.append(dados[n][0])
 
         return resultado
+    
+    def verificar_descricao(self):
+        """Retorna lista de todos os ativos cadastrados"""
+        self.executar("SELECT descrição FROM dados")
+        dados = self.cur.fetchall()
+        resultado = []
+
+        for n in range(len(dados)):
+            resultado.append(dados[n][0])
+
+        return resultado
+    
     
     def alterar_ativo(self):
         ativo = input("qual ativo deseja alterar?")

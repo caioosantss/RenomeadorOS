@@ -60,9 +60,15 @@ class ServicoInterface:
                 self.console_log("Código do ativo não pode estar vazio", "ERROR")
                 return False
             
-            self.db.registrar_ativo(codigo_ativo.upper(), descricao)
-            self.console_log(f"Ativo '{codigo_ativo.upper()}' cadastrado com sucesso", "SUCCESS")
-            return True
+            ativo = self.db.registrar_ativo(codigo_ativo.upper(), descricao)
+            
+            if ativo:
+                self.console_log(f"Ativo '{codigo_ativo.upper()}' cadastrado com sucesso", "SUCCESS")
+                return True
+            else:
+                self.console_log(f"Ativo '{codigo_ativo.upper()}' não foi cadastrado pois ja se encontra no sistema ", "ERROR")
+                return False
+            
         except Exception as e:
             self.console_log(f"Erro ao cadastrar ativo: {str(e)}", "ERROR")
             return False
@@ -72,15 +78,18 @@ class ServicoInterface:
         try:
             ativos = self.db.verificar_ativos()
             
-            if ativos:
-                self.console_log("=== ATIVOS CADASTRADOS ===", "INFO")
-                for ativo in ativos:
-                    self.console_log(f"  • {ativo}", "INFO")
-                self.console_log(f"Total: {len(ativos)} ativo(s)", "SUCCESS")
-            else:
-                self.console_log("Nenhum ativo cadastrado no sistema", "WARNING")
-            
             return ativos
+        except Exception as e:
+            self.console_log(f"Erro ao consultar ativos: {str(e)}", "ERROR")
+            return []
+        
+    def consultar_descricao(self):
+        """Consulta todos os ativos cadastrados e exibe no console"""
+        try:
+            descricao = self.db.verificar_descricao()
+            
+            return descricao
+        
         except Exception as e:
             self.console_log(f"Erro ao consultar ativos: {str(e)}", "ERROR")
             return []

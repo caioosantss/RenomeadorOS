@@ -156,21 +156,51 @@ def abrir_consultar_ativos():
 
     # Busca ativos do banco de dados
     ativos = servicos.consultar_ativos()
-    
+
+    descricaos = servicos.consultar_descricao()
+
     if ativos:
-        for ativo in ativos:
+        ctk.CTkLabel(
+            frame,
+            text="Ativo",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            text_color=BRANCO
+        ).grid(row=0, column=0, sticky="w", padx=(12, 30), pady=(10, 5))
+
+        ctk.CTkLabel(
+            frame,
+            text="Descrição",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            text_color=BRANCO
+        ).grid(row=0, column=1, sticky="w", padx=12, pady=(10, 5))
+
+        # 'linha' controla o índice da linha no grid, pois a linha 0 foi
+        # reservada para os títulos das colunas.
+        for linha, (ativo, descricao) in enumerate(zip(ativos, descricaos), start=1):
             ctk.CTkLabel(
-                frame, text=f"  {ativo}",
+                frame,
+                text=f"  {ativo}",
                 font=ctk.CTkFont(size=12),
-                text_color=VERDE_LOG, anchor="w"
-            ).pack(fill="x", padx=12, pady=5)
+                text_color=VERDE_LOG,
+                anchor="w"
+            ).grid(row=linha, column=0, sticky="w", padx=(12, 30), pady=5)
+
+            ctk.CTkLabel(
+                frame,
+                text=f"  {descricao}",
+                font=ctk.CTkFont(size=12),
+                text_color=VERDE_LOG,
+                anchor="w"
+            ).grid(row=linha, column=1, sticky="w", padx=12, pady=5)
+
     else:
         ctk.CTkLabel(
-            frame, text="Nenhum ativo cadastrado",
+            frame,
+            text="Nenhum ativo cadastrado",
             font=ctk.CTkFont(size=12),
-            text_color=CINZA_TEXTO, anchor="w"
-        ).pack(fill="x", padx=12, pady=20)
-
+            text_color=CINZA_TEXTO,
+            anchor="w"
+        ).grid(row=0, column=0, sticky="w", padx=12, pady=20)
 
 def abrir_cadastrar_ativos():
     """Abre janela para cadastrar novo ativo"""
@@ -227,7 +257,6 @@ def abrir_cadastrar_ativos():
         if servicos.cadastrar_ativo(codigo, descricao):
             entry_codigo.delete(0, "end")
             entry_descricao.delete(0, "end")
-            console_log(f"Ativo '{codigo.upper()}' cadastrado com sucesso", "SUCCESS")
 
     ctk.CTkButton(
         form, text="Salvar Ativo",

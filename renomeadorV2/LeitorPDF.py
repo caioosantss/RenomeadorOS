@@ -6,48 +6,42 @@ import rarfile
 
 caminho_pasta = []
 
-def verificar_rar(pasta):
+def descompactar_arquivo(arquivo, pasta):
+    """
+    Descompacta arquivos .zip ou .rar na pasta especificada.
+    
+    Args:
+        arquivo (str): Nome do arquivo a descompactar
+        pasta (str): Caminho da pasta contendo o arquivo
+        
+    Returns:
+        str: Mensagem de sucesso ou erro
+    """
     rarfile.UNRAR_TOOL = r"C:\Program Files\WinRAR\UnRAR.exe"
-    arquivos = os.listdir(pasta)
-
-    if arquivos:
-        arquivo = arquivos[0]
-      
-        if arquivo.lower().endswith(".rar"):
-            try: 
-                with rarfile.RarFile(os.path.join(pasta,arquivo), "r") as rar_ref:
-                    rar_ref.extractall(pasta)
-                    return "PDF descompactados"
-                
-            except rarfile.BadRarFile:
-                return "não há arquivos rar na pasta selecionada"
-        else:
-            return None
-    else:
-        return None
-
-def verificar_zip(pasta):
-    arquivos = os.listdir(pasta)
-
-    if arquivos:
-        arquivo = arquivos[0]
-      
-        if arquivo.lower().endswith(".zip"):
-            try: 
-                with zipfile.ZipFile(os.path.join(pasta,arquivo), "r") as zip_ref:
-                    zip_ref.extractall(pasta)
-                    return "PDF descompactados"
-                
-            except zipfile.BadZipFile:
-                return "não há arquivos zip na pasta selecionada"
+    
+    caminho_completo = os.path.join(pasta, arquivo)
+    extensao = arquivo.lower()
+    
+    try:
+        if extensao.endswith(".zip"):
+            with zipfile.ZipFile(caminho_completo, "r") as zip_ref:
+                zip_ref.extractall(pasta)
+            return "PDF descompactados"
             
-        elif arquivo.lower().endswith(".rar"):
-                verificar_rar(pasta)
-                return "PDF descompactados"
+        elif extensao.endswith(".rar"):
+            with rarfile.RarFile(caminho_completo, "r") as rar_ref:
+                rar_ref.extractall(pasta)
+            return "PDF descompactados"
+            
         else:
-            return None
-    else:
-        return None
+            return "Formato de arquivo não suportado"
+            
+    except zipfile.BadZipFile:
+        return "Não há arquivos zip válidos na pasta selecionada"
+    except rarfile.BadRarFile:
+        return "Não há arquivos rar válidos na pasta selecionada"
+    except Exception as e:
+        return f"Erro ao descompactar: {str(e)}"
                 
 def extrair_texto() -> dict[str, str]:
     root = Tk()
@@ -61,9 +55,9 @@ def extrair_texto() -> dict[str, str]:
     
     caminho_pasta.append(pasta)
     pdfs: dict[str, str] = {}
-     
-     #incluir verificação de arquivos zip
-    verificar_zip(pasta)
+
+    for arquivo_compactado in (os.listdir(pasta)):
+        descompactar_arquivo(arquivo_compactado, pasta)
         
     for nome_pdf in (os.listdir(pasta)): 
         if nome_pdf.lower().endswith(".pdf"):
