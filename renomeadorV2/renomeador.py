@@ -21,12 +21,28 @@ def renomear(console_log=None):
     global historico_renomeacoes
     historico_renomeacoes = []  # Limpa histórico anterior
     
+
+    
     def log(msg, nivel="INFO"):
         """Função auxiliar para logar mensagens"""
         if console_log:
             console_log(msg, nivel)
         else:
             print(f"[{nivel}] {msg}")
+            
+    def mover_arquivo(arquivo, antigo_caminho, tipo_OS, novo_nome):
+        pasta_destino = os.path.join(antigo_caminho, tipo_OS )
+        pasta_destino = os.path.join(pasta_destino, novo_nome )       
+        os.makedirs(pasta_destino,exist_ok=True)
+        
+        try:
+            os.rename(arquivo, pasta_destino)
+            log(f"arquivo {novo_nome} movido com sucesso para {pasta_destino}", "SUCCESS")
+            
+        except Exception as e:
+            log(f"Erro ao mover {novo_nome}: {e}")
+    
+        
             
     def mudar_nome(caminho_arquivo_antigo, caminho_arquivo_novo, antigo_nome, novo_nome ):
     
@@ -98,6 +114,9 @@ def renomear(console_log=None):
                     
                     log(f"✓ '{antigo_nome}' → '{novo_nome}'", "SUCCESS")
                     arquivos_processados += 1
+                    
+                    #mudar arquivo de diretorio
+                    mover_arquivo(caminho_arquivo_antigo, tipo_OS, novo_nome, )
                     
                 else: #renomear mesmo sem ativo com a estrutura codigo + tipo e incluir para que "precentiva geral tamebem caia aqui"
                     novo_nome = (f'OS {codigoPDF.group()} {tipo_OS.group()}.pdf')
