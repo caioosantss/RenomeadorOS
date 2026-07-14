@@ -57,7 +57,11 @@ def extrair_texto() -> dict[str, str]:
     pdfs: dict[str, str] = {}
 
     for arquivo_compactado in (os.listdir(pasta)):
-        descompactar_arquivo(arquivo_compactado, pasta)
+        
+        
+        if not os.path.isfile(arquivo_compactado):
+            descompactar_arquivo(arquivo_compactado, pasta)
+
         
     for nome_pdf in (os.listdir(pasta)): 
         if nome_pdf.lower().endswith(".pdf"):

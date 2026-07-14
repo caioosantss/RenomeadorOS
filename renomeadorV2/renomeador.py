@@ -28,6 +28,7 @@ def renomear(console_log=None):
             print(f"[{nivel}] {msg}")
     
     arquivos = LeitorPDF.extrair_texto()
+    
 
     if arquivos == "operação foi cancelada pelo usuário (não foi selecionada nenhuma pasta)":
         return "operação foi cancelada pelo usuário (não foi selecionada nenhuma pasta)"
@@ -38,26 +39,30 @@ def renomear(console_log=None):
     
     codigo = re.compile(r'\b\d{8}(?=\s)')
     ativos_list = banco.data.verificar_ativos()
+    tipos_OS_list = banco.data.verificar_Tipo_OS()
     
     if not ativos_list:
         log("Nenhum ativo cadastrado no sistema", "WARNING")
         return []
     
+    tipos_OS = re.compile("|".join(tipos_OS_list))
     ativosNT = "|".join(ativos_list)
     ativos = re.compile(rf"\b({ativosNT})\-?[A-Z0-9]*\d[A-Z0-9]*\b")
     
     arquivos_processados = 0
     
     for antigo_nome in arquivos:
-        
+              
         if antigo_nome.endswith(".pdf"):
             codigoPDF = re.search(codigo, arquivos[antigo_nome])
-        
-            if codigoPDF:
-                ativoPDF = re.search(ativos, arquivos[antigo_nome])
+            tipo_OS = re.search(tipos_OS,arquivos[antigo_nome] )
             
+            if codigoPDF and tipo_OS:
+                
+                ativoPDF = re.search(ativos, arquivos[antigo_nome])
+                
                 if ativoPDF:
-                    novo_nome = (f'OS {codigoPDF.group()} {ativoPDF.group()}.pdf')
+                    novo_nome = (f'OS {codigoPDF.group()} {tipo_OS.group()} - {ativoPDF.group()}.pdf')
                     
                     caminho_arquivo_antigo = os.path.join(LeitorPDF.caminho_pasta[0], antigo_nome)
                     caminho_arquivo_novo = os.path.join(LeitorPDF.caminho_pasta[0], novo_nome)
@@ -88,8 +93,46 @@ def renomear(console_log=None):
                     except OSError as erro:
                         log(f"Erro inesperado ao renomear '{antigo_nome}': {erro}", "ERROR")
                         
-                else:
-                    log(f"Aviso: Não encontrado ativo para OS {codigoPDF.group()}", "WARNING")
+
+            elif codigoPDF:
+                    
+                ativoPDF = re.search(ativos, arquivos[antigo_nome])
+                
+                if ativoPDF:
+                    novo_nome = (f'OS {codigoPDF.group()} {ativoPDF.group()}.pdf')
+                        
+                    caminho_arquivo_antigo = os.path.join(LeitorPDF.caminho_pasta[0], antigo_nome)
+                    caminho_arquivo_novo = os.path.join(LeitorPDF.caminho_pasta[0], novo_nome)
+                        
+                    if os.path.exists(caminho_arquivo_novo):
+                        log(f"Arquivo '{novo_nome}' já existe, pulando...", "WARNING")
+                        continue
+                        
+                    try:
+                        os.rename(caminho_arquivo_antigo, caminho_arquivo_novo)
+                            
+                        # Registra no histórico
+                        historico_renomeacoes.append((antigo_nome, novo_nome))
+                        banco.data.registrar_historico(novo_nome, antigo_nome, "Renomeação automática")
+                            
+                        log(f"✓ '{antigo_nome}' → '{novo_nome}'", "SUCCESS")
+                        arquivos_processados += 1
+                            
+                    except FileNotFoundError:
+                        log(f"Erro: Arquivo '{antigo_nome}' não foi encontrado", "ERROR")
+
+                    except PermissionError:
+                        log(f"Erro: Sem permissão para renomear '{antigo_nome}'", "ERROR")
+
+                    except FileExistsError:
+                        log(f"Erro: Arquivo '{novo_nome}' já existe", "ERROR")
+
+                    except OSError as erro:
+                        log(f"Erro inesperado ao renomear '{antigo_nome}': {erro}", "ERROR")
+                            
+                else:  
+                    #colocar lógica para renomear mesmo sem codigo de ativo                      
+                    log(f"Aviso: Não encontrado ativo para OS {codigoPDF.group()}", "WARNING")                       
                     continue
             else:
                 log(f"Aviso: Não encontrado código de OS em '{antigo_nome}'", "WARNING")
@@ -97,7 +140,7 @@ def renomear(console_log=None):
         else:
             log(f"Pulando: '{antigo_nome}' não é um arquivo PDF", "WARNING")
             continue
-    
+        
     log(f"Processo finalizado: {arquivos_processados} arquivo(s) renomeado(s)", "SUCCESS")
     return historico_renomeacoes
 

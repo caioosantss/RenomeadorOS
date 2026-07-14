@@ -20,14 +20,13 @@ class database:
         self.executar("""
             CREATE TABLE IF NOT EXISTS dados(
                 ativos TEXT PRIMARY KEY,
-                descrição TEXT,
-                tipos_OS TEXT
+                descrição TEXT
             )
         """)
         self.conexao.commit()
         
-    def add(self):
-        self.executar("ALTER TABLE dados DROP COLUMN email;")
+    def admin(self):
+        self.executar("DELETE FROM dados WHERE ativos IS NULL AND descrição IS NULL;")
         print("apagado")
     
     def criar_tabela_historico(self):
@@ -42,6 +41,13 @@ class database:
             )
         """)
         self.conexao.commit()
+        
+    def criar_tabela_Tipo_OS(self):
+        self.executar("""
+            CREATE TABLE IF NOT EXISTS tipo_OS(
+                tipo_OS TEXT PRIMARY KEY
+            )   
+    """)
     
     def registrar_historico(self, novo_nome, nome_antigo, alteracoes="Renomeação"):
         """
@@ -97,7 +103,7 @@ class database:
             descricao: Descrição do ativo
         """
         self.executar(
-            "SELECT 1 FROM dados WHERE ativos = ?",
+            "SELECT 1 FROM tipo_os WHERE ativos = ?",
             (codigo_ativo,)
         )
 
@@ -124,7 +130,7 @@ class database:
             descricao: Descrição do ativo
         """
         self.executar(
-            "SELECT 1 FROM dados WHERE tipos_OS = ?",
+            "SELECT 1 FROM tipo_OS WHERE tipo_OS = ?",
             (codigo,)
         )
 
@@ -132,7 +138,7 @@ class database:
         
         if resultado is None:
             self.executar("""
-                INSERT INTO dados (tipos_OS)
+                INSERT INTO tipo_OS (tipo_OS)
                 VALUES (?)
             """, (codigo,)) 
             self.conexao.commit()
@@ -144,7 +150,7 @@ class database:
 
     def verificar_ativos(self):
         """Retorna lista de todos os ativos cadastrados"""
-        self.executar("SELECT ativos FROM dados")
+        self.executar("SELECT ativos FROM dados WHERE ativos IS NOT NULL;")
         dados = self.cur.fetchall()
         resultado = []
 
@@ -154,7 +160,7 @@ class database:
         return resultado
     
     def verificar_descricao(self):
-        """Retorna lista de todos os ativos cadastrados"""
+        """Retorna lista de todas as descrições cadastradas"""
         self.executar("SELECT descrição FROM dados")
         dados = self.cur.fetchall()
         resultado = []
@@ -164,6 +170,16 @@ class database:
 
         return resultado
     
+    def verificar_Tipo_OS(self):
+        """Retorna lista de todos os tipos OS cadastrados"""
+        self.executar("SELECT tipo_OS FROM tipo_OS")
+        dados = self.cur.fetchall()
+        resultado = []
+
+        for n in range(len(dados)):
+            resultado.append(dados[n][0])
+
+        return resultado    
     
     def alterar_ativo(self):
         ativo = input("qual ativo deseja alterar?")
@@ -222,8 +238,7 @@ class database:
               
 data = database()
 data.criar_banco()
+data.criar_tabela_Tipo_OS()
 data.criar_tabela_historico()
-
-
 
             
