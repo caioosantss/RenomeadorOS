@@ -6,6 +6,7 @@ import banco
 # Armazena o histórico de renomeações para permitir desfazer
 historico_renomeacoes = []
 
+                        
 
 def renomear(console_log=None):
     """
@@ -26,7 +27,29 @@ def renomear(console_log=None):
             console_log(msg, nivel)
         else:
             print(f"[{nivel}] {msg}")
+            
+    def mudar_nome(caminho_arquivo_antigo, caminho_arquivo_novo, antigo_nome, novo_nome ):
     
+        try:
+            os.rename(caminho_arquivo_antigo, caminho_arquivo_novo)
+            
+            # Registra no histórico
+            historico_renomeacoes.append((antigo_nome, novo_nome))
+            banco.data.registrar_historico(novo_nome, antigo_nome, "Renomeação automática")
+            
+                            
+        except FileNotFoundError:
+            log(f"Erro: Arquivo '{antigo_nome}' não foi encontrado", "ERROR")
+
+        except PermissionError:
+            log(f"Erro: Sem permissão para renomear '{antigo_nome}'", "ERROR")
+
+        except FileExistsError:
+            log(f"Erro: Arquivo '{novo_nome}' já existe", "ERROR")
+
+        except OSError as erro:
+            log(f"Erro inesperado ao renomear '{antigo_nome}': {erro}", "ERROR")
+        
     arquivos = LeitorPDF.extrair_texto()
     
 
@@ -71,29 +94,26 @@ def renomear(console_log=None):
                         log(f"Arquivo '{novo_nome}' já existe, pulando...", "WARNING")
                         continue
                     
-                    try:
-                        os.rename(caminho_arquivo_antigo, caminho_arquivo_novo)
+                    mudar_nome(caminho_arquivo_antigo, caminho_arquivo_novo, antigo_nome, novo_nome )
+                    
+                    log(f"✓ '{antigo_nome}' → '{novo_nome}'", "SUCCESS")
+                    arquivos_processados += 1
+                    
+                else: #renomear mesmo sem ativo com a estrutura codigo + tipo e incluir para que "precentiva geral tamebem caia aqui"
+                    novo_nome = (f'OS {codigoPDF.group()} {tipo_OS.group()}.pdf')
+                    
+                    caminho_arquivo_antigo = os.path.join(LeitorPDF.caminho_pasta[0], antigo_nome)
+                    caminho_arquivo_novo = os.path.join(LeitorPDF.caminho_pasta[0], novo_nome)
+                    
+                    if os.path.exists(caminho_arquivo_novo):
+                        log(f"Arquivo '{novo_nome}' já existe, pulando...", "WARNING")
+                        continue
+                    
+                    mudar_nome(caminho_arquivo_antigo, caminho_arquivo_novo, antigo_nome, novo_nome )  
+                    
+                    log(f"✓ '{antigo_nome}' → '{novo_nome}'", "SUCCESS")
+                    arquivos_processados += 1           
                         
-                        # Registra no histórico
-                        historico_renomeacoes.append((antigo_nome, novo_nome))
-                        banco.data.registrar_historico(novo_nome, antigo_nome, "Renomeação automática")
-                        
-                        log(f"✓ '{antigo_nome}' → '{novo_nome}'", "SUCCESS")
-                        arquivos_processados += 1
-                        
-                    except FileNotFoundError:
-                        log(f"Erro: Arquivo '{antigo_nome}' não foi encontrado", "ERROR")
-
-                    except PermissionError:
-                        log(f"Erro: Sem permissão para renomear '{antigo_nome}'", "ERROR")
-
-                    except FileExistsError:
-                        log(f"Erro: Arquivo '{novo_nome}' já existe", "ERROR")
-
-                    except OSError as erro:
-                        log(f"Erro inesperado ao renomear '{antigo_nome}': {erro}", "ERROR")
-                        
-
             elif codigoPDF:
                     
                 ativoPDF = re.search(ativos, arquivos[antigo_nome])
@@ -107,32 +127,30 @@ def renomear(console_log=None):
                     if os.path.exists(caminho_arquivo_novo):
                         log(f"Arquivo '{novo_nome}' já existe, pulando...", "WARNING")
                         continue
-                        
-                    try:
-                        os.rename(caminho_arquivo_antigo, caminho_arquivo_novo)
-                            
-                        # Registra no histórico
-                        historico_renomeacoes.append((antigo_nome, novo_nome))
-                        banco.data.registrar_historico(novo_nome, antigo_nome, "Renomeação automática")
-                            
-                        log(f"✓ '{antigo_nome}' → '{novo_nome}'", "SUCCESS")
-                        arquivos_processados += 1
-                            
-                    except FileNotFoundError:
-                        log(f"Erro: Arquivo '{antigo_nome}' não foi encontrado", "ERROR")
-
-                    except PermissionError:
-                        log(f"Erro: Sem permissão para renomear '{antigo_nome}'", "ERROR")
-
-                    except FileExistsError:
-                        log(f"Erro: Arquivo '{novo_nome}' já existe", "ERROR")
-
-                    except OSError as erro:
-                        log(f"Erro inesperado ao renomear '{antigo_nome}': {erro}", "ERROR")
-                            
+                    
+                    mudar_nome(caminho_arquivo_antigo, caminho_arquivo_novo, antigo_nome, novo_nome )  
+                    
+                    log(f"✓ '{antigo_nome}' → '{novo_nome}'", "SUCCESS")
+                    arquivos_processados += 1
+                    
                 else:  
                     #colocar lógica para renomear mesmo sem codigo de ativo                      
-                    log(f"Aviso: Não encontrado ativo para OS {codigoPDF.group()}", "WARNING")                       
+                    log(f"Aviso: Não encontrado ativo para OS {codigoPDF.group()}", "WARNING")  
+                    
+                    novo_nome = (f'OS {codigoPDF.group()}.pdf')
+                    
+                    caminho_arquivo_antigo = os.path.join(LeitorPDF.caminho_pasta[0], antigo_nome)
+                    caminho_arquivo_novo = os.path.join(LeitorPDF.caminho_pasta[0], novo_nome)
+                    
+                    if os.path.exists(caminho_arquivo_novo):
+                        log(f"Arquivo '{novo_nome}' já existe, pulando...", "WARNING")
+                        continue
+                    
+                    mudar_nome(caminho_arquivo_antigo, caminho_arquivo_novo, antigo_nome, novo_nome )  
+                    
+                    log(f"✓ '{antigo_nome}' → '{novo_nome}'", "SUCCESS")
+                    arquivos_processados += 1
+                                         
                     continue
             else:
                 log(f"Aviso: Não encontrado código de OS em '{antigo_nome}'", "WARNING")
@@ -203,3 +221,5 @@ def desfazer_acao(console_log=None):
     log(f"Desfazer concluído: {len(desfeitos)} arquivo(s) revertido(s)", "SUCCESS")
     
     return desfeitos
+
+renomear()
