@@ -179,6 +179,7 @@ class database:
         for n in range(len(dados)):
             resultado.append(dados[n][0])
 
+        print(resultado)
         return resultado    
     
     def alterar_ativo(self):
