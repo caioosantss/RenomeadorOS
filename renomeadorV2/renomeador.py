@@ -29,6 +29,10 @@ def renomear(console_log=None):
             console_log(msg, nivel)
         else:
             print(f"[{nivel}] {msg}")
+
+    def abrir_pasta():
+        os.startfile(LeitorPDF.caminho_pasta[0])
+
             
     def mover_arquivo(caminho_atual_os, tipo_OS, pasta,nome_OS):
         verificar_tipo = re.search("PREVENTIVA", tipo_OS)
@@ -216,6 +220,7 @@ def renomear(console_log=None):
             continue
         
     log(f"Processo finalizado: {arquivos_processados} arquivo(s) renomeado(s)", "SUCCESS")
+    abrir_pasta()
     return historico_renomeacoes
 
 

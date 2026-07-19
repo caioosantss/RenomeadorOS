@@ -7,7 +7,6 @@ import sys
 class database:
     def __init__(self):
 
-# 1. Identifica se está rodando como script (.py) ou como executável compilado (.exe)
         if getattr(sys, 'frozen', False):
             base_dir = os.path.dirname(sys.executable)    
 
@@ -16,6 +15,9 @@ class database:
         
         db_folder = os.path.join(base_dir, "database")
         db_path = os.path.join(db_folder, "database.db")
+
+        if not os.path.exists(db_folder):
+            os.makedirs(db_folder)
         
         self.conexao = sqlite3.connect(db_path)
         self.cur = self.conexao.cursor()
@@ -29,6 +31,41 @@ class database:
                 descrição TEXT
             )
         """)
+
+        ativos_padrao = [   
+            ("UE", "UNIDADE EVAPORADORA"),
+            ("UC", "UNIDADE CONDENSADORA"),
+            ("IF", "INVERSOR DE FREQUÊNCIA"),
+            ("BAG", "BOMBA DE AGUA GELADA"),
+            ("BAC", "-"),
+            ("UR", "CHILLER"),
+            ("QE", "QUADRO ELÉTRICO"),
+            ("SP", "SPLIT/SPLITÃO"),
+            ("ST", "STRING BOX"),
+            ("CH", "CHILLER"),
+            ("FC", "FANCOLETTE"),
+            ("CR", "CONDENSADOR REMOTO"),
+            ("UEVRF", "UNIDADE EVAPORADORA VRF"),
+            ("QDE", "QUADRO ELÉTRICO"),
+            ("INV", "INVERSOR DE FREQUÊNCIA"),
+            ("UV", "EXAUSTOR"),
+            ("PR", "PORTA FRIGORIFICA"),
+            ("PC", "PORTA FRIGORIFICA"),
+            ("QDEG", "QUADRO ELÉTRICO"),
+            ("QDFC", "QUADRO ELÉTRICO"),
+            ("BAGPR", "BOMBA DE AGUA PRIMARIA"),
+            ("PREVENTIVA GERAL", "-"),
+            ("CORRETIVA GERAL", "-"),
+            ("QUADRO ELÉTRICO", "-"),
+            ("TRR", "TORRE DE RESFRIAMENTO"),
+            ("UCVRF", "-")
+        ]
+        
+        self.cur.executemany("""
+            INSERT OR IGNORE INTO dados (ativos, descrição) VALUES (?, ?)
+        """, ativos_padrao)
+        
+        self.conexao.commit()
         self.conexao.commit()
         
     def admin(self):
@@ -54,6 +91,20 @@ class database:
                 tipo_OS TEXT PRIMARY KEY
             )   
     """)
+
+        tipos_os_padrao = [
+            ("PREVENTIVA GERAL",),
+            ("CORRETIVA",),
+            ("REQUISIÇÃO",),
+            ("VISTORIA",)
+        ]
+        
+        # O 'OR IGNORE' garante que só insira se a PRIMARY KEY (tipo_OS) não existir
+        self.cur.executemany("""
+            INSERT OR IGNORE INTO tipo_OS (tipo_OS) VALUES (?)
+        """, tipos_os_padrao)
+        
+        self.conexao.commit()
     
     def registrar_historico(self, novo_nome, nome_antigo, alteracoes="Renomeação"):
         """
