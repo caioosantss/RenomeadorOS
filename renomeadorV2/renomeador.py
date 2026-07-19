@@ -89,7 +89,7 @@ def renomear(console_log=None):
     
     codigo = re.compile(r'\b\d{8}(?=\s)')
     ativos_list = banco.data.verificar_ativos()
-    tipos_OS_list = banco.data.verificar_Tipo_OS()
+    tipos_OS_list = banco.data.verificar_tipo_OS()
     
     if not ativos_list:
         log("Nenhum ativo cadastrado no sistema", "WARNING")

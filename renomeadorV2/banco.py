@@ -1,15 +1,21 @@
 import sqlite3
 import os
 from datetime import datetime
+import sys
 
 
 class database:
     def __init__(self):
+
+# 1. Identifica se está rodando como script (.py) ou como executável compilado (.exe)
+        if getattr(sys, 'frozen', False):
+            base_dir = os.path.dirname(sys.executable)    
+
+        else:            
+            base_dir = os.path.dirname(os.path.abspath(__file__)) 
         
-        base_dir = os.path.dirname(os.path.abspath(__file__)) 
-        
-        db_path = os.path.join( 
-            base_dir, "database", "database.db")
+        db_folder = os.path.join(base_dir, "database")
+        db_path = os.path.join(db_folder, "database.db")
         
         self.conexao = sqlite3.connect(db_path)
         self.cur = self.conexao.cursor()
@@ -94,6 +100,20 @@ class database:
         self.executar("DELETE FROM historico_renomeacoes")
         self.conexao.commit()
 
+    def excluir_ativo(self, codigo_ativo):
+        """Remove um ativo da tabela 'dados'"""
+        self.executar("DELETE FROM dados WHERE ativos = ?", (codigo_ativo,))
+        self.conexao.commit()
+        return True
+
+    def excluir_tipo_OS(self, tipo):
+        """Remove um tipo de OS da tabela 'tipo_OS'"""
+        # Substitua 'nome_coluna' pelo nome real da coluna na tabela tipo_OS
+        self.executar("DELETE FROM tipo_OS WHERE tipo_OS = ?", (tipo,))
+        self.conexao.commit()
+        return True        
+
+
     def registrar_ativo(self, codigo_ativo, descricao=""):
         """
         Registra um novo ativo
@@ -103,7 +123,7 @@ class database:
             descricao: Descrição do ativo
         """
         self.executar(
-            "SELECT 1 FROM tipo_os WHERE ativos = ?",
+            "SELECT 1 FROM dados WHERE ativos = ?",
             (codigo_ativo,)
         )
 
@@ -121,7 +141,7 @@ class database:
    
             return False
         
-    def registrar_Tipo_OS(self, codigo,):
+    def registrar_tipo_OS(self, codigo,):
         """
         Registra um novo ativo
         
@@ -170,7 +190,7 @@ class database:
 
         return resultado
     
-    def verificar_Tipo_OS(self):
+    def verificar_tipo_OS(self):
         """Retorna lista de todos os tipos OS cadastrados"""
         self.executar("SELECT tipo_OS FROM tipo_OS")
         dados = self.cur.fetchall()
@@ -179,7 +199,6 @@ class database:
         for n in range(len(dados)):
             resultado.append(dados[n][0])
 
-        print(resultado)
         return resultado    
     
     def alterar_ativo(self):
@@ -241,6 +260,4 @@ data = database()
 data.criar_banco()
 data.criar_tabela_Tipo_OS()
 data.criar_tabela_historico()
-
-
             

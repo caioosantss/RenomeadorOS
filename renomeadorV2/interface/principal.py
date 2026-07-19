@@ -25,8 +25,12 @@ TEXTO_ESCURO = "#1a1a2e"
 VERDE_LOG    = "#4fc97e"
 AMARELO      = "#f0a500"
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-PARENT_DIR = os.path.dirname(SCRIPT_DIR)
+if getattr(sys, 'frozen', False):
+    SCRIPT_DIR = sys._MEIPASS
+    PARENT_DIR = sys._MEIPASS
+else:
+    SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+    PARENT_DIR = os.path.dirname(SCRIPT_DIR)
 
 def fechar_app():
         """Fecha a aplicação"""
@@ -193,6 +197,21 @@ def abrir_consultar_ativos():
                 anchor="w"
             ).grid(row=linha, column=1, sticky="w", padx=12, pady=5)
 
+            def criar_comando_excluir(a=ativo):
+                if servicos.excluir_ativos:
+                    servicos.excluir_ativos(a)
+                    win.destroy() 
+                    abrir_consultar_ativos() 
+
+            ctk.CTkButton(
+                frame, 
+                text="excluir", 
+                width=60, 
+                height=22,
+                fg_color="transparent",      
+                command=criar_comando_excluir
+            ).grid(row=linha, column=2, sticky="w", padx=25, pady=5)
+
     else:
         ctk.CTkLabel(
             frame,
@@ -266,6 +285,139 @@ def abrir_cadastrar_ativos():
         command=salvar_ativo
     ).pack(padx=16, pady=20, fill="x")
 
+#  tipos de OS
+
+def abrir_consultar_tipos_OS():
+    """Abre janela para tipos de OS"""
+    win = ctk.CTkToplevel(app)
+    win.title("Consultar tipos de OS")
+    win.geometry("640x440")
+    win.resizable(False, False)
+    win.configure(fg_color=BRANCO)
+    win.grab_set()
+
+    ctk.CTkLabel(
+        win, text="CONSULTAR TIPOS DE OS",
+        font=ctk.CTkFont(size=16, weight="bold"),
+        text_color=AZUL_ESCURO
+    ).pack(pady=(20, 12))
+
+    search_frame = ctk.CTkFrame(win, fg_color=AZUL_PAINEL)
+    search_frame.pack(fill="x", padx=20, pady=(0, 10))
+
+    ctk.CTkEntry(
+        search_frame, placeholder_text="Buscar ativo...",
+        height=36, corner_radius=8,
+        border_color=AZUL_ESCURO, border_width=2
+    ).pack(side="left", fill="x", expand=True, padx=(0, 8))
+
+    ctk.CTkButton(
+        search_frame, text="Buscar", width=90, height=36,
+        fg_color=AZUL_BOTAO, hover_color=AZUL_ESCURO,
+        corner_radius=8
+    ).pack(side="left")
+
+    frame = ctk.CTkScrollableFrame(win, fg_color=AZUL_PAINEL, corner_radius=10)
+    frame.pack(fill="both", expand=True, padx=20, pady=(0, 20))
+
+    # Busca ativos do banco de dados
+    tipos_OS = servicos.consultar_tipo_OS()
+
+
+    if tipos_OS:
+        ctk.CTkLabel(
+            frame,
+            text="TIPOS DE OS",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            text_color=BRANCO
+        ).grid(row=0, column=0, sticky="w", padx=(12, 30), pady=(10, 5))
+
+
+        # 'linha' controla o índice da linha no grid, pois a linha 0 foi
+        # reservada para os títulos das colunas.
+        for linha, (tipo,) in enumerate(zip(tipos_OS), start=1):
+            ctk.CTkLabel(
+                frame,
+                text=f"  {tipo}",
+                font=ctk.CTkFont(size=12),
+                text_color=VERDE_LOG,
+                anchor="w"
+            ).grid(row=linha, column=0, sticky="w", padx=(12, 30), pady=5)
+
+            def criar_comando_excluir(t=tipo):
+                if servicos.excluir_tipos_OS:
+                    servicos.excluir_tipos_OS(t)
+                    win.destroy() 
+                    abrir_consultar_tipos_OS() 
+
+            ctk.CTkButton(
+                frame, 
+                text="excluir", 
+                width=60, 
+                height=22,
+                fg_color="transparent",      
+                command=criar_comando_excluir
+            ).grid(row=linha, column=2, sticky="w", padx=25, pady=5)
+
+
+    else:
+        ctk.CTkLabel(
+            frame,
+            text="Nenhum tipo de OS cadastrado",
+            font=ctk.CTkFont(size=12),
+            text_color=CINZA_TEXTO,
+            anchor="w"
+        ).grid(row=0, column=0, sticky="w", padx=12, pady=20)
+
+
+def abrir_cadastrar_tipos_OS():
+    """Abre janela para cadastrar novo tipo de OS"""
+    win = ctk.CTkToplevel(app)
+    win.title("Cadastrar tipo de OS")
+    win.geometry("500x320")
+    win.resizable(False, False)
+    win.configure(fg_color=BRANCO)
+    win.grab_set()
+
+    ctk.CTkLabel(
+        win, text="CADASTRAR TIPO OS",
+        font=ctk.CTkFont(size=16, weight="bold"),
+        text_color=AZUL_ESCURO
+    ).pack(pady=(20, 16))
+
+    form = ctk.CTkFrame(win, fg_color=AZUL_ESCURO, corner_radius=12)
+    form.pack(fill="both", expand=True, padx=20, pady=(0, 20))
+
+    # Campos do formulário
+    ctk.CTkLabel(
+        form, text="tipo de OS",
+        font=ctk.CTkFont(size=12, weight="bold"),
+        text_color=TEXTO_CLARO, anchor="w"
+    ).pack(fill="x", padx=16, pady=(14, 2))
+
+    entry_codigo = ctk.CTkEntry(
+        form, placeholder_text="Digite o código...",
+        height=36, corner_radius=8,
+        fg_color=BRANCO, text_color=TEXTO_ESCURO,
+        border_color=AZUL_BOTAO, border_width=1
+    )
+    entry_codigo.pack(fill="x", padx=16)
+
+
+    def salvar_tipo():
+        """Salva o tipo no banco de dados"""
+        tipo = entry_codigo.get()
+        
+        if servicos.cadastrar_tipo_OS(tipo):
+            entry_codigo.delete(0, "end")
+
+    ctk.CTkButton(
+        form, text="Salvar tipo de OS",
+        height=40, corner_radius=8,
+        fg_color=AZUL_BOTAO, hover_color="#174a82",
+        font=ctk.CTkFont(size=13, weight="bold"),
+        command=salvar_tipo
+    ).pack(padx=16, pady=20, fill="x")
 
 # ============================
 # HEADER
@@ -416,6 +568,8 @@ botoes_menu = [
     ("Historico",        abrir_historico,        "transparent"),
     ("Consultar Ativos", abrir_consultar_ativos, "transparent"),
     ("Cadastrar Ativos", abrir_cadastrar_ativos, "transparent"),
+    ("Consultar tipos de OS", abrir_consultar_tipos_OS, "transparent"),
+    ("Cadastrar tipo de OS", abrir_cadastrar_tipos_OS, "transparent"),
 ]
 
 for texto, cmd, cor in botoes_menu:
@@ -434,7 +588,7 @@ for texto, cmd, cor in botoes_menu:
 
 # Botão Desfazer logo abaixo dos demais
 ctk.CTkButton(
-    right, text="Desfazer ultima acao",
+    right, text="Desfazer ultima renomeação",
     font=ctk.CTkFont(size=12),
     height=38, corner_radius=10,
     fg_color="transparent",
