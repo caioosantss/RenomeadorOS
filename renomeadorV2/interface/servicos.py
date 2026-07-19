@@ -72,6 +72,32 @@ class ServicoInterface:
         except Exception as e:
             self.console_log(f"Erro ao cadastrar ativo: {str(e)}", "ERROR")
             return False
+        
+    def cadastrar_tipo_OS(self, tipo_OS):
+        """
+        Cadastra um novo tipo OS no banco de dados
+        
+        Args:
+            tipo OS: Código de identificação do ativo
+
+        """
+        try:
+            if not tipo_OS or not tipo_OS.strip():
+                self.console_log("Código do tipo de OS não pode estar vazio", "ERROR")
+                return False
+            
+            tipo_OS = self.db.registrar_tipo_OS(tipo_OS.upper())
+            
+            if tipo_OS:
+                self.console_log(f"tipo de OS '{tipo_OS.upper()}' cadastrado com sucesso", "SUCCESS")
+                return True
+            else:
+                self.console_log(f"tipo de OS '{tipo_OS.upper()}' não foi cadastrado pois ja se encontra no sistema ", "ERROR")
+                return False
+            
+        except Exception as e:
+            self.console_log(f"Erro ao cadastrar tipo de OS: {str(e)}", "ERROR")
+            return False
     
     def consultar_ativos(self):
         """Consulta todos os ativos cadastrados e exibe no console"""
@@ -93,6 +119,38 @@ class ServicoInterface:
         except Exception as e:
             self.console_log(f"Erro ao consultar ativos: {str(e)}", "ERROR")
             return []
+
+    def consultar_tipo_OS(self):
+        """Consulta todos os tipos de OS cadastrados e exibe no console"""
+        try:
+            tipos_OS = self.db.verificar_tipo_OS()
+            
+            return tipos_OS
+        except Exception as e:
+            self.console_log(f"Erro ao consultar tipos de OS: {str(e)}", "ERROR")
+            return []
+
+    def excluir_ativos(self, ativo):
+        """exclui ativos do banco de dados"""
+        try:
+            self.db.excluir_ativo(ativo)
+            self.console_log(f"Ativo {ativo} excluído com sucesso", "SUCCESS")
+            return True
+
+        except Exception as e:
+            self.console_log(f"Erro ao excluir ativos: {str(e)}", "ERROR")
+            return False
+
+    def excluir_tipos_OS(self,tipo):
+        """exclui ativos do banco de dados"""
+        try:
+            self.db.excluir_tipo_OS(tipo)
+            self.console_log(f"tipo de OS {tipo} excluído com sucesso", "SUCCESS")
+            return True
+        except Exception as e:
+            self.console_log(f"Erro ao consultar tipos de OS: {str(e)}", "ERROR")
+            return False
+
     
     def consultar_historico(self):
         """Consulta o histórico de renomeações"""
