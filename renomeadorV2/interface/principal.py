@@ -404,7 +404,7 @@ if logo_img:
     ctk.CTkLabel(header, image=logo_img, text="").place(x=16, y=9)
 else:
     ctk.CTkLabel(
-        header, text="SUA ORGANIZAÇÃO", font=ctk.CTkFont(size=22, weight="bold"),
+        header, text="", font=ctk.CTkFont(size=22, weight="bold"),
         text_color=AZUL_ESCURO
     ).place(x=16, y=24)
 
@@ -603,7 +603,7 @@ ctk.CTkLabel(
 
 ctk.CTkLabel(
     footer,
-    text="SUA ORGANIZAÇÃO",
+    text="",
     font=ctk.CTkFont(size=10),
     text_color=CINZA_TEXTO
 ).grid(row=0, column=2, padx=20, sticky="e")
