@@ -2,6 +2,7 @@ import re
 import os
 import LeitorPDF
 import banco
+import shutil
 
 # Armazena o histórico de renomeações para permitir desfazer
 historico_renomeacoes = []
@@ -254,31 +255,47 @@ def desfazer_acao(console_log=None):
     
     pasta = LeitorPDF.caminho_pasta[0]
     desfeitos = []
+
     
     # Reverte as renomeações em ordem inversa
-    for nome_antigo, nome_novo in reversed(historico_renomeacoes):
-        caminho_antigo = os.path.join(pasta, nome_antigo)
-        caminho_novo = os.path.join(pasta, nome_novo)
-        
-        try:
-            if os.path.exists(caminho_novo):
+    for pasta_atual, subpastas, arquivos in os.walk(pasta):
+        for nome_antigo, nome_novo in reversed(historico_renomeacoes):
+
+            caminho_novo = os.path.join(pasta_atual, nome_novo)
+
+            if not os.path.exists(caminho_novo):
+                continue
+
+            caminho_antigo = os.path.join(pasta_atual, nome_antigo)
+
+            try:
+                # Desfaz a renomeação
                 os.rename(caminho_novo, caminho_antigo)
+
+                # Move para a pasta principal
+                destino = os.path.join(pasta, nome_antigo)
+                shutil.move(caminho_antigo, destino)
+
                 desfeitos.append((nome_novo, nome_antigo))
-                log(f"✓ Desfeito: '{nome_novo}' → '{nome_antigo}'", "SUCCESS")
-            else:
-                log(f"Aviso: Arquivo '{nome_novo}' não encontrado", "WARNING")
-        
-        except FileNotFoundError:
-            log(f"Erro: Arquivo '{nome_novo}' não foi encontrado", "ERROR")
-        
-        except PermissionError:
-            log(f"Erro: Sem permissão para renomear '{nome_novo}'", "ERROR")
-        
-        except OSError as erro:
-            log(f"Erro ao desfazer renomeação: {erro}", "ERROR")
-    
-    # Limpa o histórico após desfazer
-    historico_renomeacoes = []
-    log(f"Desfazer concluído: {len(desfeitos)} arquivo(s) revertido(s)", "SUCCESS")
-    
-    return desfeitos
+                log(f"✓ Desfeito e movido: '{nome_novo}' → '{nome_antigo}'", "SUCCESS")
+
+            except FileNotFoundError:
+                log(f"Erro: Arquivo '{nome_novo}' não foi encontrado", "ERROR")
+
+            except PermissionError:
+                log(f"Erro: Sem permissão para mover '{nome_novo}'", "ERROR")
+
+            except OSError as erro:
+                log(f"Erro ao desfazer renomeação: {erro}", "ERROR")
+
+
+    # Remove as subpastas vazias (de dentro para fora)
+    for pasta_atual, subpastas, arquivos in os.walk(pasta, topdown=False):
+        if pasta_atual == pasta:
+            continue
+
+        try:
+            os.rmdir(pasta_atual)
+            log(f"✓ Pasta removida: '{os.path.basename(pasta_atual)}'", "SUCCESS")
+        except OSError:
+            log(f"Aviso: A pasta '{os.path.basename(pasta_atual)}' não está vazia.", "WARNING")

@@ -140,20 +140,6 @@ def abrir_consultar_ativos():
         text_color=AZUL_ESCURO
     ).pack(pady=(20, 12))
 
-    search_frame = ctk.CTkFrame(win, fg_color=AZUL_PAINEL)
-    search_frame.pack(fill="x", padx=20, pady=(0, 10))
-
-    ctk.CTkEntry(
-        search_frame, placeholder_text="Buscar ativo...",
-        height=36, corner_radius=8,
-        border_color=AZUL_ESCURO, border_width=2
-    ).pack(side="left", fill="x", expand=True, padx=(0, 8))
-
-    ctk.CTkButton(
-        search_frame, text="Buscar", width=90, height=36,
-        fg_color=AZUL_BOTAO, hover_color=AZUL_ESCURO,
-        corner_radius=8
-    ).pack(side="left")
 
     frame = ctk.CTkScrollableFrame(win, fg_color=AZUL_PAINEL, corner_radius=10)
     frame.pack(fill="both", expand=True, padx=20, pady=(0, 20))
@@ -302,20 +288,7 @@ def abrir_consultar_tipos_OS():
         text_color=AZUL_ESCURO
     ).pack(pady=(20, 12))
 
-    search_frame = ctk.CTkFrame(win, fg_color=AZUL_PAINEL)
-    search_frame.pack(fill="x", padx=20, pady=(0, 10))
 
-    ctk.CTkEntry(
-        search_frame, placeholder_text="Buscar ativo...",
-        height=36, corner_radius=8,
-        border_color=AZUL_ESCURO, border_width=2
-    ).pack(side="left", fill="x", expand=True, padx=(0, 8))
-
-    ctk.CTkButton(
-        search_frame, text="Buscar", width=90, height=36,
-        fg_color=AZUL_BOTAO, hover_color=AZUL_ESCURO,
-        corner_radius=8
-    ).pack(side="left")
 
     frame = ctk.CTkScrollableFrame(win, fg_color=AZUL_PAINEL, corner_radius=10)
     frame.pack(fill="both", expand=True, padx=20, pady=(0, 20))
@@ -426,12 +399,12 @@ header = ctk.CTkFrame(app, fg_color=CINZA_HEADER, height=82, corner_radius=0)
 header.pack(fill="x")
 header.pack_propagate(False)
 
-logo_img = carregar_imagem("assets/logo_RGT.png", (175, 64))
+logo_img = carregar_imagem("assets/logo.png", (175, 64))
 if logo_img:
     ctk.CTkLabel(header, image=logo_img, text="").place(x=16, y=9)
 else:
     ctk.CTkLabel(
-        header, text="RGT", font=ctk.CTkFont(size=22, weight="bold"),
+        header, text="", font=ctk.CTkFont(size=22, weight="bold"),
         text_color=AZUL_ESCURO
     ).place(x=16, y=24)
 
@@ -630,7 +603,7 @@ ctk.CTkLabel(
 
 ctk.CTkLabel(
     footer,
-    text="RGT Engenharia de Sistemas",
+    text="",
     font=ctk.CTkFont(size=10),
     text_color=CINZA_TEXTO
 ).grid(row=0, column=2, padx=20, sticky="e")
