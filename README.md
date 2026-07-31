@@ -225,14 +225,29 @@ python main.py
 ### Estrutura de pastas (resumo)
 
 ```
-├── assets/            # Ícones e recursos visuais
-├── interface/         # Componentes de interface gráfica
-├── demo/               # Dados e arquivos de demonstração/avaliação (opcional)
-│   ├── seed_demo.py    # popula o banco com ativos e tipos de OS de exemplo
-│   └── sample_os/      # PDFs fictícios para teste da renomeação
-├── installer/          # Script do Inno Setup (.iss) e saída do instalador
-├── main.py             # Ponto de entrada da aplicação
-└── requirements.txt
+RENOMEADOROS/
+├── OS TESTE/
+├── renomeadorV1/
+│   ├── renomeador.exe
+│   └── renomeador.py
+├── renomeadorV2/
+│   ├── __pycache__/
+│   ├── assets/
+│   ├── database/
+│   ├── interface/
+│   │   ├── __pycache__/
+│   │   ├── __init__.py
+│   │   ├── principal.py
+│   │   └── servicos.py
+│   ├── banco.py
+│   ├── LeitorPDF.py
+│   ├── main.py
+│   ├── renomeador.py
+│   ├── requirements.txt
+│   └── seed_demo.py
+├── .gitattributes
+├── .gitignore
+└── README.md
 ```
 
 ## Gerando o executável e o instalador
@@ -248,6 +263,8 @@ pyinstaller --noconfirm --onedir --windowed --icon="assets/icon.ico" \
 ```
 
 Isso gera a pasta `dist/main/`, contendo o executável (`main.exe`) e todos os arquivos necessários para rodar a aplicação de forma independente (sem precisar de Python instalado na máquina do usuário).
+
+obs: lembre-se de executar dentro da pasta renomeadorV2
 
 ### 2. Gerar o instalador com Inno Setup
 

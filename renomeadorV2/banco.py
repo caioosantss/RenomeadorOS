@@ -265,44 +265,7 @@ class database:
     def insert_dados_teste(self):
         
             ativos_padrao = [
-                ("SW", "SWITCH"),
-                ("RTR", "ROTEADOR"),
-                ("MDM", "MODEM"),
-                ("HUB", "HUB"),
-                ("FW", "FIREWALL"),
-                ("AP", "ACCESS POINT"),
-                ("SRV", "SERVIDOR"),
-                ("NAS", "ARMAZENAMENTO EM REDE (NAS)"),
-                ("PC", "COMPUTADOR"),
-                ("NB", "NOTEBOOK"),
-                ("WS", "WORKSTATION"),
-                ("MON", "MONITOR"),
-                ("PRN", "IMPRESSORA"),
-                ("SCN", "SCANNER"),
-                ("UPS", "NOBREAK (UPS)"),
-                ("RCK", "RACK"),
-                ("PDU", "PDU"),
-                ("PBX", "CENTRAL TELEFÔNICA (PABX/IP PBX)"),
-                ("IPF", "TELEFONE IP"),
-                ("CAM", "CÂMERA IP"),
-                ("DVR", "GRAVADOR DIGITAL (DVR)"),
-                ("NVR", "GRAVADOR DE CÂMERAS IP (NVR)"),
-                ("BIO", "CONTROLADOR DE ACESSO BIOMÉTRICO"),
-                ("CTRL", "CONTROLADOR DE ACESSO"),
-                ("KVM", "CHAVE KVM"),
-                ("SFP", "MÓDULO SFP"),
-                ("ONT", "TERMINAL ÓPTICO (ONT)"),
-                ("OLT", "TERMINAL DE LINHA ÓPTICA (OLT)"),
-                ("PATCH", "PATCH PANEL"),
-                ("CAB", "CABEAMENTO ESTRUTURADO"),
-                ("CPU", "PROCESSADOR"),
-                ("SSD", "SSD"),
-                ("HD", "DISCO RÍGIDO (HD)"),
-                ("GPU", "PLACA DE VÍDEO"),
-                ("RAM", "MEMÓRIA RAM"),
-                ("PSU", "FONTE DE ALIMENTAÇÃO"),
-                ("CORRETIVA GERAL", "-"),
-                ("PREVENTIVA GERAL", "-")
+("UE", "UNIDADE EVAPORADORA"), ("UC", "UNIDADE CONDENSADORA"), ("IF", "INVERSOR DE FREQUÊNCIA"), ("BAG", "BOMBA DE AGUA GELADA"), ("BAC", "-"), ("UR", "CHILLER"), ("QE", "QUADRO ELÉTRICO"), ("SP", "SPLIT/SPLITÃO"), ("ST", "STRING BOX"), ("CH", "CHILLER"), ("FC", "FANCOLETTE"), ("CR", "CONDENSADOR REMOTO"), ("UEVRF", "UNIDADE EVAPORADORA VRF"), ("QDE", "QUADRO ELÉTRICO"), ("INV", "INVERSOR DE FREQUÊNCIA"), ("UV", "EXAUSTOR"), ("PR", "PORTA FRIGORIFICA"), ("PC", "PORTA FRIGORIFICA"), ("QDEG", "QUADRO ELÉTRICO"), ("QDFC", "QUADRO ELÉTRICO"), ("BAGPR", "BOMBA DE AGUA PRIMARIA"), ("PREVENTIVA GERAL", "-"), ("CORRETIVA GERAL", "-"), ("QUADRO ELÉTRICO", "-"), ("TRR", "TORRE DE RESFRIAMENTO"), ("UCVRF", "-")
             ]
     
             self.cur.executemany("""
