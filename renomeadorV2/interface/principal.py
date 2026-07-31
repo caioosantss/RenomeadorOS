@@ -399,6 +399,7 @@ header = ctk.CTkFrame(app, fg_color=CINZA_HEADER, height=82, corner_radius=0)
 header.pack(fill="x")
 header.pack_propagate(False)
 
+#caso queira que a logo de sua organização apareça, coloque o arquivo .png na pasta assets e modifique a linha abaixo
 logo_img = carregar_imagem("assets/logo.png", (175, 64))
 if logo_img:
     ctk.CTkLabel(header, image=logo_img, text="").place(x=16, y=9)
@@ -603,6 +604,7 @@ ctk.CTkLabel(
 
 ctk.CTkLabel(
     footer,
+    #texto abaixo tem como espaço livre para colocar o nome de sua organização no rodapé
     text="",
     font=ctk.CTkFont(size=10),
     text_color=CINZA_TEXTO

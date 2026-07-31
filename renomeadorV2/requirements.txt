@@ -1,8 +1,17 @@
-# Interface gráfica moderna baseada em Tkinter
-customtkinter>=5.2.2
+#interface gráfica
+customtkinter==5.2.2
+Pillow==11.3.0
 
-# Manipulação de imagens (logo da interface)
-Pillow>=11.0.0
+#ferramenta para gerar a compliação para .exe
+PyInstaller==6.15.0
+pyinstaller-hooks-contrib==2025.8
 
-# Leitura e extração de texto de PDFs
-PyMuPDF>=1.26.0
+#leitura de PDF's
+PyMuPDF==1.27.2.3
+
+#descompactação de arquivos
+rarfile==4.2
+
+#identificar padrões via expressões regulares
+regex==2026.1.15
+

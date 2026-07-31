@@ -4,7 +4,9 @@ from tkinter import Tk, filedialog
 import zipfile
 import rarfile
 
-caminho_pasta = []
+caminho_pasta = str
+
+print(caminho_pasta)
 
 def descompactar_arquivo(arquivo, pasta):
     """
@@ -53,7 +55,9 @@ def extrair_texto() -> dict[str, str]:
         status = "operação foi cancelada pelo usuário (não foi selecionada nenhuma pasta)"
         return status
     
-    caminho_pasta.append(pasta)
+    global caminho_pasta
+    caminho_pasta = pasta
+    print(caminho_pasta)
     pdfs: dict[str, str] = {}
 
     for arquivo_compactado in (os.listdir(pasta)):

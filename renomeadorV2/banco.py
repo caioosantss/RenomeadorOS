@@ -32,41 +32,10 @@ class database:
             )
         """)
 
-        ativos_padrao = [   
-            ("UE", "UNIDADE EVAPORADORA"),
-            ("UC", "UNIDADE CONDENSADORA"),
-            ("IF", "INVERSOR DE FREQUÊNCIA"),
-            ("BAG", "BOMBA DE AGUA GELADA"),
-            ("BAC", "-"),
-            ("UR", "CHILLER"),
-            ("QE", "QUADRO ELÉTRICO"),
-            ("SP", "SPLIT/SPLITÃO"),
-            ("ST", "STRING BOX"),
-            ("CH", "CHILLER"),
-            ("FC", "FANCOLETTE"),
-            ("CR", "CONDENSADOR REMOTO"),
-            ("UEVRF", "UNIDADE EVAPORADORA VRF"),
-            ("QDE", "QUADRO ELÉTRICO"),
-            ("INV", "INVERSOR DE FREQUÊNCIA"),
-            ("UV", "EXAUSTOR"),
-            ("PR", "PORTA FRIGORIFICA"),
-            ("PC", "PORTA FRIGORIFICA"),
-            ("QDEG", "QUADRO ELÉTRICO"),
-            ("QDFC", "QUADRO ELÉTRICO"),
-            ("BAGPR", "BOMBA DE AGUA PRIMARIA"),
-            ("PREVENTIVA GERAL", "-"),
-            ("CORRETIVA GERAL", "-"),
-            ("QUADRO ELÉTRICO", "-"),
-            ("TRR", "TORRE DE RESFRIAMENTO"),
-            ("UCVRF", "-")
-        ]
-        
-        self.cur.executemany("""
-            INSERT OR IGNORE INTO dados (ativos, descrição) VALUES (?, ?)
-        """, ativos_padrao)
         
         self.conexao.commit()
         self.conexao.commit()
+        
         
     def admin(self):
         self.executar("DELETE FROM dados WHERE ativos IS NULL AND descrição IS NULL;")
@@ -91,20 +60,6 @@ class database:
                 tipo_OS TEXT PRIMARY KEY
             )   
     """)
-
-        tipos_os_padrao = [
-            ("PREVENTIVA GERAL",),
-            ("CORRETIVA",),
-            ("REQUISIÇÃO",),
-            ("VISTORIA",)
-        ]
-        
-        # O 'OR IGNORE' garante que só insira se a PRIMARY KEY (tipo_OS) não existir
-        self.cur.executemany("""
-            INSERT OR IGNORE INTO tipo_OS (tipo_OS) VALUES (?)
-        """, tipos_os_padrao)
-        
-        self.conexao.commit()
     
     def registrar_historico(self, novo_nome, nome_antigo, alteracoes="Renomeação"):
         """
@@ -232,7 +187,7 @@ class database:
     
     def verificar_descricao(self):
         """Retorna lista de todas as descrições cadastradas"""
-        self.executar("SELECT descrição FROM dados")
+        self.executar("SELECT descrição FROM dados ORDER BY ativos")
         dados = self.cur.fetchall()
         resultado = []
 
@@ -306,6 +261,68 @@ class database:
         else:
             print("o ativo não foi localizado")
             return
+        
+    def insert_dados_teste(self):
+        
+            ativos_padrao = [
+                ("SW", "SWITCH"),
+                ("RTR", "ROTEADOR"),
+                ("MDM", "MODEM"),
+                ("HUB", "HUB"),
+                ("FW", "FIREWALL"),
+                ("AP", "ACCESS POINT"),
+                ("SRV", "SERVIDOR"),
+                ("NAS", "ARMAZENAMENTO EM REDE (NAS)"),
+                ("PC", "COMPUTADOR"),
+                ("NB", "NOTEBOOK"),
+                ("WS", "WORKSTATION"),
+                ("MON", "MONITOR"),
+                ("PRN", "IMPRESSORA"),
+                ("SCN", "SCANNER"),
+                ("UPS", "NOBREAK (UPS)"),
+                ("RCK", "RACK"),
+                ("PDU", "PDU"),
+                ("PBX", "CENTRAL TELEFÔNICA (PABX/IP PBX)"),
+                ("IPF", "TELEFONE IP"),
+                ("CAM", "CÂMERA IP"),
+                ("DVR", "GRAVADOR DIGITAL (DVR)"),
+                ("NVR", "GRAVADOR DE CÂMERAS IP (NVR)"),
+                ("BIO", "CONTROLADOR DE ACESSO BIOMÉTRICO"),
+                ("CTRL", "CONTROLADOR DE ACESSO"),
+                ("KVM", "CHAVE KVM"),
+                ("SFP", "MÓDULO SFP"),
+                ("ONT", "TERMINAL ÓPTICO (ONT)"),
+                ("OLT", "TERMINAL DE LINHA ÓPTICA (OLT)"),
+                ("PATCH", "PATCH PANEL"),
+                ("CAB", "CABEAMENTO ESTRUTURADO"),
+                ("CPU", "PROCESSADOR"),
+                ("SSD", "SSD"),
+                ("HD", "DISCO RÍGIDO (HD)"),
+                ("GPU", "PLACA DE VÍDEO"),
+                ("RAM", "MEMÓRIA RAM"),
+                ("PSU", "FONTE DE ALIMENTAÇÃO"),
+                ("CORRETIVA GERAL", "-"),
+                ("PREVENTIVA GERAL", "-")
+            ]
+    
+            self.cur.executemany("""
+                INSERT OR IGNORE INTO dados (ativos, descrição) VALUES (?, ?)
+            """, ativos_padrao)
+            
+            self.conexao.commit()
+            
+    def insert_tipo_OS_teste(self):
+            tipos_os_padrao = [
+                ("PREVENTIVA GERAL",),
+                ("CORRETIVA",),
+                ("REQUISIÇÃO",),
+                ("VISTORIA",)
+        ]
+            self.cur.executemany("""
+                INSERT OR IGNORE INTO tipo_OS (tipo_OS) VALUES (?)
+            """, tipos_os_padrao)
+            
+            self.conexao.commit()
               
 data = database()
 data.criar_banco()

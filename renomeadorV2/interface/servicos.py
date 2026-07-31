@@ -86,9 +86,9 @@ class ServicoInterface:
                 self.console_log("Código do tipo de OS não pode estar vazio", "ERROR")
                 return False
             
-            tipo_OS = self.db.registrar_tipo_OS(tipo_OS.upper())
+            verificar = self.db.registrar_tipo_OS(tipo_OS.upper())
             
-            if tipo_OS:
+            if verificar:
                 self.console_log(f"tipo de OS '{tipo_OS.upper()}' cadastrado com sucesso", "SUCCESS")
                 return True
             else:

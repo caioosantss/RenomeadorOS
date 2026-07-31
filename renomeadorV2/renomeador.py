@@ -32,7 +32,7 @@ def renomear(console_log=None):
             print(f"[{nivel}] {msg}")
 
     def abrir_pasta():
-        os.startfile(LeitorPDF.caminho_pasta[0])
+        os.startfile(LeitorPDF.caminho_pasta)
 
             
     def mover_arquivo(caminho_atual_os, tipo_OS, pasta,nome_OS):
@@ -121,8 +121,8 @@ def renomear(console_log=None):
                     #estrutura de OS: codigo + tipo + ativo
                     novo_nome = (f'OS {codigoPDF.group()} {tipo_OS.group()} - {ativoPDF.group()}.pdf')
                     
-                    caminho_arquivo_antigo = os.path.join(LeitorPDF.caminho_pasta[0], antigo_nome)
-                    caminho_arquivo_novo = os.path.join(LeitorPDF.caminho_pasta[0], novo_nome)
+                    caminho_arquivo_antigo = os.path.join(LeitorPDF.caminho_pasta, antigo_nome)
+                    caminho_arquivo_novo = os.path.join(LeitorPDF.caminho_pasta, novo_nome)
                     
                     if os.path.exists(caminho_arquivo_novo):
                         log(f"Arquivo '{novo_nome}' já existe, pulando...", "WARNING")
@@ -137,7 +137,7 @@ def renomear(console_log=None):
                     
                     if caminho_atual_OS is not None:
                         
-                        destino_final = mover_arquivo(caminho_atual_OS, tipo_OS.group(), LeitorPDF.caminho_pasta[0], novo_nome)
+                        destino_final = mover_arquivo(caminho_atual_OS, tipo_OS.group(), LeitorPDF.caminho_pasta, novo_nome)
                         if destino_final is not None:
                             log(f"arquivo {novo_nome} movido para {destino_final}")
                         else:
@@ -146,8 +146,8 @@ def renomear(console_log=None):
                 else: #renomear mesmo sem ativo com a estrutura: codigo + tipo
                     novo_nome = (f'OS {codigoPDF.group()} {tipo_OS.group()}.pdf')
                     
-                    caminho_arquivo_antigo = os.path.join(LeitorPDF.caminho_pasta[0], antigo_nome)
-                    caminho_arquivo_novo = os.path.join(LeitorPDF.caminho_pasta[0], novo_nome)
+                    caminho_arquivo_antigo = os.path.join(LeitorPDF.caminho_pasta, antigo_nome)
+                    caminho_arquivo_novo = os.path.join(LeitorPDF.caminho_pasta, novo_nome)
                     
                     if os.path.exists(caminho_arquivo_novo):
                         log(f"Arquivo '{novo_nome}' já existe, pulando...", "WARNING")
@@ -159,7 +159,7 @@ def renomear(console_log=None):
                     caminho_atual_OS = mudar_nome(caminho_arquivo_antigo, caminho_arquivo_novo, antigo_nome, novo_nome )
                     
                     
-                    destino_final = mover_arquivo(caminho_atual_OS, tipo_OS.group(), LeitorPDF.caminho_pasta[0], novo_nome)
+                    destino_final = mover_arquivo(caminho_atual_OS, tipo_OS.group(), LeitorPDF.caminho_pasta, novo_nome)
                     if destino_final is not None:
                         log(f"arquivo {novo_nome} movido para {destino_final}")
                     else:
@@ -175,8 +175,8 @@ def renomear(console_log=None):
                     #estrutura de codigo OS + ativo, ou seja provavelmente preventiva
                     novo_nome = (f'OS {codigoPDF.group()} {ativoPDF.group()}.pdf')
                         
-                    caminho_arquivo_antigo = os.path.join(LeitorPDF.caminho_pasta[0], antigo_nome)
-                    caminho_arquivo_novo = os.path.join(LeitorPDF.caminho_pasta[0], novo_nome)
+                    caminho_arquivo_antigo = os.path.join(LeitorPDF.caminho_pasta, antigo_nome)
+                    caminho_arquivo_novo = os.path.join(LeitorPDF.caminho_pasta, novo_nome)
                         
                     if os.path.exists(caminho_arquivo_novo):
                         log(f"Arquivo '{novo_nome}' já existe, pulando...", "WARNING")
@@ -188,7 +188,7 @@ def renomear(console_log=None):
                     caminho_atual_OS = mudar_nome(caminho_arquivo_antigo, caminho_arquivo_novo, antigo_nome, novo_nome )
                     
                     
-                    destino_final = mover_arquivo(caminho_atual_OS, "PREVENTIVA", LeitorPDF.caminho_pasta[0], novo_nome)
+                    destino_final = mover_arquivo(caminho_atual_OS, "PREVENTIVA", LeitorPDF.caminho_pasta, novo_nome)
                     if destino_final is not None:
                         log(f"arquivo {novo_nome} movido para {destino_final}")
                     else:
@@ -200,8 +200,8 @@ def renomear(console_log=None):
                     
                     novo_nome = (f'OS {codigoPDF.group()}.pdf')
                     
-                    caminho_arquivo_antigo = os.path.join(LeitorPDF.caminho_pasta[0], antigo_nome)
-                    caminho_arquivo_novo = os.path.join(LeitorPDF.caminho_pasta[0], novo_nome)
+                    caminho_arquivo_antigo = os.path.join(LeitorPDF.caminho_pasta, antigo_nome)
+                    caminho_arquivo_novo = os.path.join(LeitorPDF.caminho_pasta, novo_nome)
                     
                     if os.path.exists(caminho_arquivo_novo):
                         log(f"Arquivo '{novo_nome}' já existe, pulando...", "WARNING")
@@ -253,7 +253,7 @@ def desfazer_acao(console_log=None):
         log("Erro: Nenhuma pasta foi selecionada anteriormente", "ERROR")
         return []
     
-    pasta = LeitorPDF.caminho_pasta[0]
+    pasta = LeitorPDF.caminho_pasta
     desfeitos = []
 
     
