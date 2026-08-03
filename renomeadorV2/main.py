@@ -5,6 +5,7 @@ Executa a aplicação da interface gráfica
 
 import sys
 import os
+import seed_demo
 
 
 # Adiciona o diretório ao path

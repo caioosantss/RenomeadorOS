@@ -257,9 +257,7 @@ O processo de empacotamento tem duas etapas: primeiro o **PyInstaller** gera o e
 ### 1. Gerar o executável com PyInstaller
 
 ```bash
-pyinstaller --noconfirm --onedir --windowed --icon="assets/icon.ico" \
-  --add-data "assets;assets" --add-data "interface;interface" \
-  --hidden-import="pymupdf" --hidden-import="rarfile" main.py
+python -m PyInstaller --noconfirm --onedir --windowed  --add-data "assets;assets" --add-data "interface;interface" --hidden-import="pymupdf" --hidden-import="fitz" --hidden-import="rarfile" main.py
 ```
 
 Isso gera a pasta `dist/main/`, contendo o executável (`main.exe`) e todos os arquivos necessários para rodar a aplicação de forma independente (sem precisar de Python instalado na máquina do usuário).
@@ -295,8 +293,6 @@ Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
 
-SetupIconFile=C:\RenomeadorOS\renomeadorV2\assets\icon.ico
-
 PrivilegesRequired=lowest
 
 UninstallDisplayIcon={app}\{#MyAppExeName}
@@ -308,19 +304,14 @@ Name: "portuguesebrazil"; MessagesFile: "compiler:Languages\BrazilianPortuguese.
 Name: "desktopicon"; Description: "Criar atalho na Área de Trabalho"; GroupDescription: "Atalhos:"; Flags: unchecked
 
 [Files]
-Source: "C:\RenomeadorOS\renomeadorV2\dist\main\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+; {src} garante que ele busque a pasta dist no mesmo diretório do arquivo .iss
+Source: "{src}\dist\main\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs external
 
 [Icons]
-Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-
-Name: "{autodesktop}\{#MyAppName}"; \
-Filename: "{app}\{#MyAppExeName}"; \
-Tasks: desktopicon
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; \
-Description: "Executar {#MyAppName}"; \
-Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "Executar {#MyAppName}"; Flags: nowait postinstall skipifsilent
 ```
 
 **O que cada bloco faz:**
