@@ -16,7 +16,7 @@ O sistema nasceu da necessidade de padronizar o tratamento de arquivos PDF baixa
 
 ### Vídeo demonstrativo — renomeação
 
-📹 **[COLOQUE AQUI O GIF DO PROCESSO DE RENOMEAÇÃO]** → salve o arquivo em `docs/videos/demo-renomeacao.gif` e referencie assim:
+![Vídeo demostrativo do Renomeador de OS](renomeadorV2\assets\exemplo_de_renomeação.gif)
 
 
 
@@ -102,7 +102,7 @@ O **tipo de OS** representa a categoria/natureza do serviço executado (ex.: cor
 3. Associe, se aplicável, a **pasta de destino** para onde os arquivos desse tipo devem ser movidos.
 4. Salve o cadastro. A partir deste momento, o sistema passa a reconhecer esse tipo de OS automaticamente nas próximas renomeações.
 
-📷 *[Espaço para GIF cadastro de tipo de OS — `docs/images/tela-cadastro-tipo-os.jpg`]*
+![Vídeo demostrativo de cadastrar e consultar tipos OS](renomeadorV2\assets\exemplo_de_salvar_tipo_os.gif)
 
 **Exemplo (telecomunicações):**
 
@@ -127,15 +127,10 @@ O **ativo** representa o equipamento/item físico ao qual a OS se refere. O cada
 
 Após cadastrados, os ativos podem ser conferidos na tela **Consultar Ativos**, que exibe o código do ativo e sua descrição:
 
-![Tela de consulta de ativos](docs/images/tela-consultar-ativos.jpg)
+![Tela de cadastrar e consultar ativos](renomeadorV2\assets\exemplo_de_salvar_ativos.gif)
 
-*Exemplo: cada ativo é cadastrado com um código curto (ex.: `AP`) e uma descrição associada (ex.: `SWITCH`), permitindo excluir cadastros diretamente pela tabela.*
+*Exemplo: cada ativo é cadastrado com um código curto (ex.: `AP`) e uma descrição associada (ex.: `access point`), permitindo excluir cadastros diretamente pela tabela.*
 
-📹 **[COLOQUE AQUI O GIF DO PROCESSO DE CADASTRAR ATIVO]** → salve o arquivo em `docs/videos/demo-cadastro-ativo.gif` e referencie assim:
-
-```markdown
-![Demonstração do cadastro de ativo](docs/videos/demo-cadastro-ativo.gif)
-```
 
 **Exemplo (telecomunicações):**
 
