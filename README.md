@@ -162,7 +162,17 @@ E movido automaticamente para a pasta cadastrada para o tipo de OS `INSTALAÇÃO
 
 ## Ambiente de demonstração / avaliação
 
-Para facilitar testes rápidos (ex.: avaliação por recrutadores ou demonstração para novos clientes), o projeto disponibiliza dados de exemplo já cadastrados em ``RenomeadorOS\OS TESTE`` e um conjunto de PDFs fictícios prontos para uso — sem necessidade de configurar o sistema do zero.
+Para facilitar testes rápidos, o projeto disponibiliza um instalador (via Inno Setup) para download. Após instalado, a pasta conterá dois executáveis principais: `main.exe`, sem nenhum dado pré-cadastrado, e `seed_demo.exe`, responsável por popular o banco local com dados genéricos (ativos e tipos de OS de exemplo). Para agilizar ainda mais os testes, um conjunto de PDFs fictícios já está disponível em `RenomeadorOS\OS TESTE`, prontos para uso na renomeação — sem necessidade de configurar o sistema do zero.
+
+**Passo a passo:**
+
+1. Baixe e execute o instalador (`Setup_RenomeadorOS_vX.X.X.exe`).
+2. Siga o assistente de instalação até concluir.
+3. Na pasta de instalação, execute `seed_demo.exe` uma única vez para popular o banco com os dados de exemplo.
+4. Abra `main.exe` — os dados de exemplo já estarão disponíveis.
+5. Clique em **Renomear OS** e selecione os PDFs de teste disponíveis em `RenomeadorOS\OS TESTE` para ver o fluxo completo em ação.
+
+> **Observação:** caso não se sinta confortável em executar um `.exe` já compilado, é possível montar esse mesmo ambiente a partir do código-fonte, seguindo o passo a passo da seção [Ambiente de desenvolvimento](#ambiente-de-desenvolvimento).
 
 **Dados de exemplo:**
 Um comando/script pré-cadastra a lista padrão de ativos e tipos de OS (ex.: `SWITCH`, `ROTEADOR`, `SERVIDOR`, `MANUTENÇÃO CORRETIVA`, `MANUTENÇÃO PREVENTIVA`, `REQUISIÇÃO`, entre outros) diretamente no banco SQLite local, permitindo testar a renomeação imediatamente.
@@ -202,7 +212,7 @@ Um conjunto de Ordens de Serviço fictícias (dados e clientes inventados, sem q
 
 ```bash
 # Clonar o repositório
-git clone <url-do-repositorio>
+git clone <https://github.com/caioosantss/RenomeadorOS>
 cd renomeador-os
 
 # Criar e ativar ambiente virtual
@@ -261,72 +271,19 @@ obs: lembre-se de executar dentro da pasta renomeadorV2
 
 ### 2. Gerar o instalador com Inno Setup
 
-Com o [Inno Setup](https://jrsoftware.org/isinfo.php) instalado, compile o script abaixo (salve-o como, por exemplo, `installer/setup.iss`, ajustando os caminhos conforme a estrutura do seu projeto):
+*Instalando o Inno Setup:*
 
-```ini
-;==========================================================
-; Renomeador de OS - Instalador
-;==========================================================
+1. Baixe o instalador em [jrsoftware.org/isinfo.php](https://jrsoftware.org/isinfo.php) (versão gratuita).
+2. Execute o instalador e siga o assistente até concluir — nenhuma configuração especial é necessária.
 
-#define MyAppName "Renomeador de OS"
-#define MyAppVersion "2.0.0"
-#define MyAppExeName "main.exe"
+*Rodando o script:*
 
-[Setup]
-AppId={{A4D84718-2F39-4C7E-90A7-RENOMEADOROS}}
-AppName={#MyAppName}
-AppVersion={#MyAppVersion}
-AppPublisher=
-DefaultDirName={localappdata}\Programs\{#MyAppName}
-DefaultGroupName={#MyAppName}
-DisableProgramGroupPage=yes
+O arquivo setup.iss já está disponibilizado junto ao repositório. Para compilá-lo:
 
-OutputDir=Installer
-OutputBaseFilename=Setup_RenomeadorOS_v2.0.0
-
-Compression=lzma2
-SolidCompression=yes
-WizardStyle=modern
-
-PrivilegesRequired=lowest
-
-UninstallDisplayIcon={app}\{#MyAppExeName}
-
-[Languages]
-Name: "portuguesebrazil"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
-
-[Tasks]
-Name: "desktopicon"; Description: "Criar atalho na Área de Trabalho"; GroupDescription: "Atalhos:"; Flags: unchecked
-
-[Files]
-; {src} garante que ele busque a pasta dist no mesmo diretório do arquivo .iss
-Source: "{src}\dist\main\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs external
-
-[Icons]
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
-
-[Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "Executar {#MyAppName}"; Flags: nowait postinstall skipifsilent
-```
-
-**O que cada bloco faz:**
-
-| Seção | Função |
-|---|---|
-| `[Setup]` | Define nome, versão, ícone, pasta de instalação padrão (`{localappdata}` — não exige privilégio de administrador) e o nome do arquivo final do instalador |
-| `[Languages]` | Instala o assistente em português do Brasil |
-| `[Tasks]` | Cria a opção (desmarcada por padrão) de atalho na área de trabalho |
-| `[Files]` | Copia todo o conteúdo gerado pelo PyInstaller (`dist/main/*`) para a pasta de instalação |
-| `[Icons]` | Cria os atalhos no menu iniciar e, opcionalmente, na área de trabalho |
-| `[Run]` | Oferece a opção de já abrir o programa ao final da instalação |
-
-**Passo a passo:**
-
-1. Ajuste os caminhos `Source:` e `SetupIconFile:` do script para refletir a estrutura de pastas do seu ambiente (os caminhos acima, com `C:\RenomeadorOS\...`, são específicos de uma máquina de desenvolvimento e precisam ser adaptados).
-2. Atualize `MyAppVersion` a cada nova versão do sistema.
-3. Abra o script `.iss` no Inno Setup Compiler e clique em **Compile** (ou rode via linha de comando com `ISCC.exe setup.iss`).
-4. O instalador final será gerado na pasta definida em `OutputDir` (`Installer/`), com o nome definido em `OutputBaseFilename`.
-
+1. Certifique-se de que o setup.iss está salvo em RenomeadorOS/renomeadorV2/ — *na mesma pasta onde o PyInstaller gera o dist/*. Isso é essencial: o script busca os arquivos em dist\main\* relativo à própria localização dele; se for movido para outra pasta sem ajustar o caminho, a compilação não vai encontrar os arquivos do programa.
+2. Abra o setup.iss com dois cliques (ele abre direto no Inno Setup Compiler).
+3. Clique em *Build → Compile* (ou aperte Ctrl+F9).
+4. O instalador final será gerado em Installer/, dentro da mesma pasta, com o nome Setup_RenomeadorOS_v2.0.0.exe.
 > ⚠️ **Alterando o ícone:** o ícone do instalador e dos atalhos vem do arquivo apontado em `SetupIconFile` (e também usado no comando do PyInstaller, com `--icon`). Para trocar o ícone da aplicação, **substitua o arquivo `.ico` referenciado em ambos os comandos** (PyInstaller e Inno Setup) por um novo arquivo `.ico` — não é possível apenas renomear um arquivo de imagem comum, ele precisa estar no formato `.ico`.
 
 ## Histórico de versões

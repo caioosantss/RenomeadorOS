@@ -1,3 +1,4 @@
+ini
 ;==========================================================
 ; Renomeador de OS - Instalador
 ;==========================================================
@@ -7,7 +8,7 @@
 #define MyAppExeName "main.exe"
 
 [Setup]
-AppId={{A4D84718-2F39-4C7E-90A7-RENOMEADOROS}}
+AppId={{8F3C2A61-4B7D-4E9A-9C21-6A1F0D5E2B44}}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher=
@@ -33,7 +34,7 @@ Name: "portuguesebrazil"; MessagesFile: "compiler:Languages\BrazilianPortuguese.
 Name: "desktopicon"; Description: "Criar atalho na Área de Trabalho"; GroupDescription: "Atalhos:"; Flags: unchecked
 
 [Files]
-; {src} garante que ele busque a pasta dist no mesmo diretório do arquivo .iss
+; {src} = pasta onde este arquivo .iss está salvo — deve estar na mesma pasta que "dist"
 Source: "{src}\dist\main\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs external
 
 [Icons]

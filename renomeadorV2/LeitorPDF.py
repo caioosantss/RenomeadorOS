@@ -57,7 +57,6 @@ def extrair_texto() -> dict[str, str]:
     
     global caminho_pasta
     caminho_pasta = pasta
-    print(caminho_pasta)
     pdfs: dict[str, str] = {}
 
     for arquivo_compactado in (os.listdir(pasta)):
