@@ -1,9 +1,8 @@
-ini
 ;==========================================================
 ; Renomeador de OS - Instalador
 ;==========================================================
 
-#define MyAppName "Renomeador de OS"
+#define MyAppName "Renomeador de OS demo"
 #define MyAppVersion "2.0.0"
 #define MyAppExeName "main.exe"
 
@@ -15,8 +14,9 @@ AppPublisher=
 DefaultDirName={localappdata}\Programs\{#MyAppName}
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
+; SetupIconFile=assets\icon.ico   ; opcional: descomente para usar um ícone personalizado no instalador (precisa ser .ico)
 
-OutputDir=Installer
+OutputDir=demo
 OutputBaseFilename=Setup_RenomeadorOS_v2.0.0
 
 Compression=lzma2
@@ -34,10 +34,11 @@ Name: "portuguesebrazil"; MessagesFile: "compiler:Languages\BrazilianPortuguese.
 Name: "desktopicon"; Description: "Criar atalho na Área de Trabalho"; GroupDescription: "Atalhos:"; Flags: unchecked
 
 [Files]
-; {src} = pasta onde este arquivo .iss está salvo — deve estar na mesma pasta que "dist"
+; {src} = pasta onde este .iss está salvo. Precisa ficar em renomeadorV2\, ao lado da pasta "dist" gerada pelo PyInstaller.
 Source: "{src}\dist\main\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs external
 
 [Icons]
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]

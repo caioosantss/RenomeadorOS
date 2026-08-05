@@ -5,8 +5,6 @@ Executa a aplicação da interface gráfica
 
 import sys
 import os
-import seed_demo
-
 
 # Adiciona o diretório ao path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))

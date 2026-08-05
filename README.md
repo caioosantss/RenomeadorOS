@@ -10,7 +10,7 @@ O sistema nasceu da necessidade de padronizar o tratamento de arquivos PDF baixa
 
 ### Tela principal
 
-![Tela principal do Renomeador de OS](renomeadorV2\assets\tela_principal.png)
+![Tela principal do Renomeador de OS](renomeadorV2/assets/tela_principal.png)
 
 *Tela inicial: início da renomeação, console de saída em tempo real e menu lateral com acesso a histórico, consultas e cadastros.*
 
@@ -153,46 +153,34 @@ OS 88888888 INSTALAÇÃO - SWITCH-V1
 
 E movido automaticamente para a pasta cadastrada para o tipo de OS `INSTALAÇÃO`.
 
-## Instalação (usuário final)
-
-1. Baixe o instalador (`Setup_RenomeadorOS_vX.X.X.exe`) gerado via Inno Setup — ver seção [Gerando o executável e o instalador](#gerando-o-executável-e-o-instalador).
-2. Execute o instalador e siga as instruções na tela (idioma português já vem configurado por padrão).
-3. Ao abrir o sistema pela primeira vez, cadastre os **tipos de OS** e os **ativos** relevantes para o seu contexto de uso, através do menu lateral.
-4. Utilize o botão **Renomear OS** para iniciar o processamento dos arquivos.
 
 ## Ambiente de demonstração / avaliação
 
-Para facilitar testes rápidos, o projeto disponibiliza um instalador (via Inno Setup) para download. Após instalado, a pasta conterá dois executáveis principais: `main.exe`, sem nenhum dado pré-cadastrado, e `seed_demo.exe`, responsável por popular o banco local com dados genéricos (ativos e tipos de OS de exemplo). Para agilizar ainda mais os testes, um conjunto de PDFs fictícios já está disponível em `RenomeadorOS\OS TESTE`, prontos para uso na renomeação — sem necessidade de configurar o sistema do zero.
+Para facilitar testes rápidos, o projeto disponibiliza os arquivos ja prontos e compilados para download. Após instalado, a pasta conterá dois executáveis principais: `main.exe`, sem nenhum dado pré-cadastrado, e `seed_demo.exe`, responsável por popular o banco local com dados genéricos (ativos e tipos de OS de exemplo). Para agilizar ainda mais os testes, um conjunto de PDFs fictícios já está disponível em `RenomeadorOS\OS TESTE`, prontos para uso na renomeação — sem necessidade de configurar o sistema do zero.
 
 **Passo a passo:**
 
-1. Baixe e execute o instalador (`Setup_RenomeadorOS_vX.X.X.exe`).
-2. Siga o assistente de instalação até concluir.
-3. Na pasta de instalação, execute `seed_demo.exe` uma única vez para popular o banco com os dados de exemplo.
-4. Abra `main.exe` — os dados de exemplo já estarão disponíveis.
-5. Clique em **Renomear OS** e selecione os PDFs de teste disponíveis em `RenomeadorOS\OS TESTE` para ver o fluxo completo em ação.
+1. Baixe a pasta [Renomeador de OS demo ](./RenomeadorV2/demo/Renomeador%20de%20OS&20demo/).
+2. Na pasta, execute [seed_demo](./RenomeadorV2/demo/Renomeador%20de%20OS&20demo/seed_demo.exe) uma única vez para popular o banco com os dados de exemplo.
+3. Abra `main.exe` — os dados de exemplo já estarão disponíveis.
+4. Clique em **Renomear OS** e selecione os PDFs de teste disponíveis em `RenomeadorOS\OS TESTE` para ver o fluxo completo em ação.
 
-> **Observação:** caso não se sinta confortável em executar um `.exe` já compilado, é possível montar esse mesmo ambiente a partir do código-fonte, seguindo o passo a passo da seção [Ambiente de desenvolvimento](#ambiente-de-desenvolvimento).
+> **Observação:** caso não se sinta confortável em executar um `.exe` já compilado, é possível configurar este mesmo ambinte a partir da seção  [Ambiente de desenvolvimento](#ambiente-de-desenvolvimento) e popular o banco ao rodar o arquivo 🔗 **[seed_demo.py](./renomeadorV2/seed_demo.py)** mas isso exige que o ambiente de desenvolvimento já esteja previamente instalado e que o script seja rodado a partir do diretorio aonde o projeto se encontra.
+
 
 **Dados de exemplo:**
 Um comando/script pré-cadastra a lista padrão de ativos e tipos de OS (ex.: `SWITCH`, `ROTEADOR`, `SERVIDOR`, `MANUTENÇÃO CORRETIVA`, `MANUTENÇÃO PREVENTIVA`, `REQUISIÇÃO`, entre outros) diretamente no banco SQLite local, permitindo testar a renomeação imediatamente.
 
-🔗 **[seed_demo.py](./renomeadorV2/seed_demo.py)**
-
-```bash
-python seed_demo.py
-```
-
 **PDFs de teste:**
 Um conjunto de Ordens de Serviço fictícias (dados e clientes inventados, sem qualquer vínculo com empresas reais) está disponível para testar os diferentes padrões de renomeação — preventiva, corretiva e requisição, cobrindo vários tipos de ativos.
 
-🔗 [Abrir pasta OS TESTE](./RenomeadorV2/OS%20TESTE/)
+🔗 [Abrir pasta OS TESTE](./RenomeadorV2/demo/OS%20TESTE/)
 
 **Roteiro sugerido para teste:**
 1. Instale o sistema e rode o script de dados de exemplo.
 2. Abra o Renomeador de OS e clique em **Renomear OS**.
-3. Selecione os PDFs de teste disponibilizados em 🔗 [OS TESTE](./RenomeadorV2/OS%20TESTE/).
-4. Confira no console de saída o resultado da renomeação e a movimentação dos arquivos para as pastas corretas.
+3. Selecione os PDFs de teste disponibilizados em 🔗 [OS TESTE](./RenomeadorV2/demo/OS%20TESTE/).
+4. Confira no console de saída do programa resultado da renomeação e a movimentação dos arquivos para as pastas corretas após a abertura da mesma.
 
 ## Ambiente de desenvolvimento
 
@@ -231,14 +219,23 @@ python main.py
 
 ```
 RENOMEADOROS/
-├── OS TESTE/
 ├── renomeadorV1/
 │   ├── renomeador.exe
 │   └── renomeador.py
 ├── renomeadorV2/
+|   ├──demo
+|   |    ├──OS TESTE/
+|   |    └─Renomeador de OS demo/
+|   |       
 │   ├── __pycache__/
-│   ├── assets/
+│   ├── docs/
+|   |    ├──exemplo_de_renomeacao.gif
+|   |    ├──exemplo_de_salvar_ativos.gif
+|   |    ├──exemplo_de_savar_tipo_os.gif
+|   |    └──tela_principal.png
 │   ├── database/
+|   |   └──databse.db
+|   |
 │   ├── interface/
 │   │   ├── __pycache__/
 │   │   ├── __init__.py
@@ -262,7 +259,7 @@ O processo de empacotamento tem duas etapas: primeiro o **PyInstaller** gera o e
 ### 1. Gerar o executável com PyInstaller
 
 ```bash
-python -m PyInstaller --noconfirm --onedir --windowed  --add-data "assets;assets" --add-data "interface;interface" --hidden-import="pymupdf" --hidden-import="fitz" --hidden-import="rarfile" main.py
+python -m PyInstaller --noconfirm --onedir --windowed  --add-data "docs;docs" --add-data "interface;interface" --hidden-import="pymupdf" --hidden-import="fitz" --hidden-import="rarfile" main.py
 ```
 
 Isso gera a pasta `dist/main/`, contendo o executável (`main.exe`) e todos os arquivos necessários para rodar a aplicação de forma independente (sem precisar de Python instalado na máquina do usuário).
@@ -280,11 +277,13 @@ obs: lembre-se de executar dentro da pasta renomeadorV2
 
 O arquivo setup.iss já está disponibilizado junto ao repositório. Para compilá-lo:
 
-1. Certifique-se de que o setup.iss está salvo em RenomeadorOS/renomeadorV2/ — *na mesma pasta onde o PyInstaller gera o dist/*. Isso é essencial: o script busca os arquivos em dist\main\* relativo à própria localização dele; se for movido para outra pasta sem ajustar o caminho, a compilação não vai encontrar os arquivos do programa.
+1. Certifique-se de que o setup.iss está salvo *na mesma pasta onde o PyInstaller gera o dist/*. Isso é essencial: o script busca os arquivos em dist\main\* relativo à própria localização dele; se for movido para outra pasta sem ajustar o caminho, a compilação não vai encontrar os arquivos do programa.
 2. Abra o setup.iss com dois cliques (ele abre direto no Inno Setup Compiler).
 3. Clique em *Build → Compile* (ou aperte Ctrl+F9).
 4. O instalador final será gerado em Installer/, dentro da mesma pasta, com o nome Setup_RenomeadorOS_v2.0.0.exe.
 > ⚠️ **Alterando o ícone:** o ícone do instalador e dos atalhos vem do arquivo apontado em `SetupIconFile` (e também usado no comando do PyInstaller, com `--icon`). Para trocar o ícone da aplicação, **substitua o arquivo `.ico` referenciado em ambos os comandos** (PyInstaller e Inno Setup) por um novo arquivo `.ico` — não é possível apenas renomear um arquivo de imagem comum, ele precisa estar no formato `.ico`.
+
+
 
 ## Histórico de versões
 
