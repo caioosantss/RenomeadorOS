@@ -10,13 +10,13 @@ O sistema nasceu da necessidade de padronizar o tratamento de arquivos PDF baixa
 
 ### Tela principal
 
-![Tela principal do Renomeador de OS](renomeadorV2/assets/tela_principal.png)
+![Tela principal do Renomeador de OS](renomeadorV2/docs/tela_principal.png)
 
 *Tela inicial: início da renomeação, console de saída em tempo real e menu lateral com acesso a histórico, consultas e cadastros.*
 
 ### Vídeo demonstrativo — renomeação
 
-![Vídeo demostrativo do Renomeador de OS](renomeadorV2/assets/exemplo_de_renomeacao.gif)
+![Vídeo demostrativo do Renomeador de OS](renomeadorV2/docs/exemplo_de_renomeacao.gif)
 
 
 
@@ -102,7 +102,7 @@ O **tipo de OS** representa a categoria/natureza do serviço executado (ex.: cor
 3. Associe, se aplicável, a **pasta de destino** para onde os arquivos desse tipo devem ser movidos.
 4. Salve o cadastro. A partir deste momento, o sistema passa a reconhecer esse tipo de OS automaticamente nas próximas renomeações.
 
-![Vídeo demostrativo de cadastrar e consultar tipos OS](renomeadorV2/assets/exemplo_de_salvar_tipo_os.gif)
+![Vídeo demostrativo de cadastrar e consultar tipos OS](renomeadorV2/docs/exemplo_de_salvar_tipo_os.gif)
 
 **Exemplo (telecomunicações):**
 
@@ -127,7 +127,7 @@ O **ativo** representa o equipamento/item físico ao qual a OS se refere. O cada
 
 Após cadastrados, os ativos podem ser conferidos na tela **Consultar Ativos**, que exibe o código do ativo e sua descrição:
 
-![Tela de cadastrar e consultar ativos](renomeadorV2/assets/exemplo_de_salvar_ativos.gif)
+![Tela de cadastrar e consultar ativos](renomeadorV2/docs/exemplo_de_salvar_ativos.gif)
 
 *Exemplo: cada ativo é cadastrado com um código curto (ex.: `AP`) e uma descrição associada (ex.: `access point`), permitindo excluir cadastros diretamente pela tabela.*
 
