@@ -4,3 +4,5 @@
 *.Tcl linguist-detectable=false
 *.xsl linguist-detectable=false
 *.xslt linguist-detectable=false
+*.tcl linguist-detectable=false
+**/*.tcl linguist-detectable=false
