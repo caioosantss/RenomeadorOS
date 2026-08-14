@@ -207,44 +207,6 @@ class database:
 
         return resultado    
     
-    def alterar_ativo(self):
-        ativo = input("qual ativo deseja alterar?")
-        novo_nome = input("qual sera o novo nome? ")
-        
-        
-        self.executar(
-            "SELECT 1 FROM dados WHERE ativos = ?",
-            (ativo,)
-        )
-
-        resultado = self.cur.fetchone()
-               
-        if resultado is not None:
-        
-            self.executar(
-                """
-                UPDATE dados 
-                set ativos = ?
-                where ativos = ?  
-                      """, (novo_nome, ativo, ))
-            self.conexao.commit()
-            
-        else:
-            print("o ativo não foi localizado")
-            return
-
-    def alterar_descricao(self):
-        ativo = input("qual ativo deseja alterar a descricao?")
-        nova_descricao = input("insira a nova descrição")
-        
-        while nova_descricao == "":
-            nova_descricao = input("insira a nova descrição")
-
- 
-        self.executar(
-            "SELECT 1 FROM dados WHERE ativos = ?",
-            (ativo,)
-        )
 
         resultado = self.cur.fetchone()
                
