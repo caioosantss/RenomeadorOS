@@ -1,5 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 *.tcl linguist-detectable=false
+*.Tcl linguist-detectable=false
 *.xsl linguist-detectable=false
 *.xslt linguist-detectable=false
