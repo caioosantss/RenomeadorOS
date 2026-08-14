@@ -49,6 +49,20 @@ O sistema nasceu da necessidade de padronizar o tratamento de arquivos PDF baixa
 4. Com base no que for encontrado (código, ativo e/ou tipo de OS), o sistema monta o novo nome do arquivo seguindo um padrão fixo.
 5. O arquivo é renomeado e, em seguida, movido automaticamente para a pasta correspondente ao seu tipo de OS, criando a pasta caso ela ainda não exista.
 
+## Desfazer renomeação
+
+O sistema mantém um histórico de todas as renomeações e movimentações realizadas, permitindo reverter qualquer operação de forma rápida e segura.
+
+### Vídeo demonstrativo — desfazer renomeação
+
+![Vídeo demostrativo de desfazer renomeação](renomeadorV2/docs/exemplo_video_desfazer_renomeacao.gif)
+
+Quando você escolhe Desfazer última renomeação no menu, o sistema:
+
+Recupera o nome anterior — consulta o histórico para obter o nome original do arquivo antes da renomeação.
+Restaura o arquivo original — renomeia o arquivo de volta para seu nome anterior.
+Desfaz a movimentação de pasta — move o arquivo para o local original de onde foi processado, eliminando a pasta de destino caso tenha sido criada vazia especificamente para essa operação.
+
 ## Padrões de renomeação
 
 A lógica de renomeação combina até três elementos — **código**, **tipo de OS** e **ativo** — resultando em quatro padrões possíveis:
@@ -150,6 +164,7 @@ Um PDF contendo o código `88888888`, o tipo de OS `INSTALAÇÃO` e o ativo `SWI
 OS 88888888 INSTALAÇÃO - SWITCH-V1
 ```
 
+
 E movido automaticamente para a pasta cadastrada para o tipo de OS `INSTALAÇÃO`.
 
 
@@ -180,8 +195,9 @@ Um conjunto de Ordens de Serviço fictícias (dados e clientes inventados, sem q
 2. Abra o Renomeador de OS e clique em **Renomear OS**.
 3. Selecione os PDFs de teste disponibilizados em 🔗 [OS TESTE](./RenomeadorV2/demo/OS%20TESTE/).
 4. Confira no console de saída do programa resultado da renomeação e a movimentação dos arquivos para as pastas corretas após a abertura da mesma.
+5. Selecione o botão de **desfazer renomeação** e confirme o resultado no diretório selecionado.
 
-![Vídeo demostrativo do Renomeador de OS](renomeadorV2/docs/exemplo_de_renomeacao.gif)
+![Vídeo demostrativo do Renomeador de OS](renomeadorV2/docs/exemplo_de_teste.gif)
 
 ## Ambiente de desenvolvimento
 
@@ -201,7 +217,7 @@ Um conjunto de Ordens de Serviço fictícias (dados e clientes inventados, sem q
 
 ```bash
 # Clonar o repositório
-git clone <https://github.com/caioosantss/RenomeadorOS>
+git clone https://github.com/caioosantss/RenomeadorOS
 cd renomeador-os
 
 # Criar e ativar ambiente virtual
@@ -308,7 +324,7 @@ Este projeto está licenciado sob os termos da **Licença MIT**. Veja o arquivo 
 ```
 MIT License
 
-Copyright (c) [ano] [nome do titular dos direitos]
+Copyright (c) [2026] [Caio Dos Santos Pereira]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
